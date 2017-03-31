@@ -1,3 +1,4 @@
 .refcache
 .targets.mk
-lib
+liblib
+draft-palombini-ace-coap-pubsub-profile.md
