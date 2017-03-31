@@ -3,7 +3,7 @@ coding: utf-8
 
 title: CoAP Pub-Sub Profile for Authentication and Authorization for Constrained Environments (ACE)
 abbrev: coap-pubsub-profile
-docname: draft-palombini-ace-coap-pubsub-profile-00
+docname: draft-palombini-ace-coap-pubsub-profile-latest
 #date: 2017-03-13
 category: std
 
