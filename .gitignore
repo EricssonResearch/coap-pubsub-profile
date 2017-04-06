@@ -1,4 +1,12 @@
-.refcache
+*.redxml
+*.xml
+*.txt
+*.html
+*.pdf
+*~
+*.swp
+/*-[0-9][0-9].xml
 .targets.mk
-liblib
-draft-palombini-ace-coap-pubsub-profile.md
+.refcache
+issues.json
+lib
