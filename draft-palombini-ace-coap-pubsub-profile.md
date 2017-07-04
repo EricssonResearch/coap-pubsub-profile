@@ -46,7 +46,6 @@ This specification defines a profile for authentication and authorization for pu
 
 --- middle
 
-
 # Introduction
 
 This specification defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework {{I-D.ietf-ace-oauth-authz}}. The pub-sub scenario is described in {{I-D.ietf-core-coap-pubsub}}. 
