@@ -538,7 +538,7 @@ address {
 </pre>
 <p class="figure">Figure 4: Example of Topic Keying Material Request payload for a Publisher</p>
 <p id="rfc.section.3.1.p.6">The AS2 verifies that the Client is authorized to access the topic and, if the &#8220;cnf&#8221; parameter is present, stores the public key of the Client.</p>
-<p id="rfc.section.3.1.p.7">The AS2 response contains an empty token and the keying material to protect the publication (&#8220;key&#8221; field in the payload). Moreover, the payload MUST contain the &#8220;profile&#8221; parameter, set to value &#8220;OSCON&#8221;, and the &#8220;token_type&#8221; set to &#8220;none&#8221;.</p>
+<p id="rfc.section.3.1.p.7">The AS2 response contains an empty token and the keying material to protect the publication (&#8220;key&#8221; field in the payload). Moreover, the payload MUST contain the &#8220;profile&#8221; parameter, set to value &#8220;publisher&#8221;, and the &#8220;token_type&#8221; set to &#8220;none&#8221;.</p>
 <p id="rfc.section.3.1.p.8">TODO: define &#8220;key&#8221; parameter following ACE framework</p>
 <p id="rfc.section.3.1.p.9">The &#8220;key&#8221; parameter value MUST be a serialized COSE Key (see Section 7 of <a href="#RFC8152" class="xref">[RFC8152]</a>), with the following values:</p>
 <p></p>
@@ -556,7 +556,7 @@ address {
 {
   "access_token" : NULL,
   "token_type" : "none",
-  "profile" : "OSCON",
+  "profile" : "publisher",
   "key" : h'a4010402421234030c205002e2cc3a9b92855220f255fff1c615bc'
  /{1: 4, 2: h'1234', 3: 12, -1: h'02e2cc3a9b92855220f255fff1c615bc'}/
 }
@@ -608,7 +608,7 @@ address {
 
 <ul>
 <li>The POST request to the /token endpoint on AS2, does not contain the cnf parameter containing the Client&#8217;s COSE key.</li>
-<li>The AS2 response contains a &#8220;cnf&#8221; parameter whose value is set to a COSE Key Set, (Section 7 of <a href="#RFC8152" class="xref">[RFC8152]</a>) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers</li>
+<li>The AS2 response contains a &#8220;cnf&#8221; parameter whose value is set to a COSE Key Set, (Section 7 of <a href="#RFC8152" class="xref">[RFC8152]</a>) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers, and the &#8220;profile&#8221; parameter is set to value &#8220;subscriber&#8221;</li>
 </ul>
 <p id="rfc.section.4.p.4">An example of the payload of a Topic Keying Material Request and corresponding response for a Subscriber is specified in <a href="#fig-post2-as2" class="xref">Figure 8</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
 <div id="rfc.figure.8"></div>
@@ -628,7 +628,7 @@ address {
 {
   "access_token" : NULL,
   "token_type" : "none",
-  "profile" : "OSCON",
+  "profile" : "subscriber",
   "key" : h'a4010402421234030c205002e2cc3a9b92855220f255fff1c615bc',
  /{1: 4, 2: h'1234', 3: 12, -1: h'02e2cc3a9b92855220f255fff1c615bc'}/
   "cnf" : [
@@ -735,7 +735,7 @@ address {
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
 </h1>
-<p id="rfc.section.7.p.1">TODO: &#8220;key&#8221; parameter, OSCON profile identifier</p>
+<p id="rfc.section.7.p.1">TODO: &#8220;key&#8221; parameter, &#8220;publisher&#8221; and &#8220;subscriber&#8221; profile identifiers</p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
 </h1>
