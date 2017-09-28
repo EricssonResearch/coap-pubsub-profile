@@ -216,7 +216,7 @@ An example of the payload of a Topic Keying Material Request for a Publisher is 
 
 The AS2 verifies that the Client is authorized to access the topic and, if the "cnf" parameter is present, stores the public key of the Client.
 
-The AS2 response contains an empty token and the keying material to protect the publication ("key" field in the payload). Moreover, the payload MUST contain the "profile" parameter, set to value "OSCON", and the "token_type" set to "none".
+The AS2 response contains an empty token and the keying material to protect the publication ("key" field in the payload). Moreover, the payload MUST contain the "profile" parameter, set to value "publisher", and the "token_type" set to "none".
 
 TODO: define "key" parameter following ACE framework
 
@@ -233,7 +233,7 @@ An example for the response is detailed in {{fig-resp-as2}}.
 {
   "access_token" : NULL,
   "token_type" : "none",
-  "profile" : "OSCON",
+  "profile" : "publisher",
   "key" : h'a4010402421234030c205002e2cc3a9b92855220f255fff1c615bc'
  /{1: 4, 2: h'1234', 3: 12, -1: h'02e2cc3a9b92855220f255fff1c615bc'}/
 }
@@ -287,7 +287,7 @@ Step (E) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 * The POST request to the /token endpoint on AS2, does not contain the cnf parameter containing the Client's COSE key.
 
-* The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers
+* The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers, and the "profile" parameter is set to value "subscriber"
 
 An example of the payload of a Topic Keying Material Request and corresponding response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
 
@@ -306,7 +306,7 @@ An example of the payload of a Topic Keying Material Request and corresponding r
 {
   "access_token" : NULL,
   "token_type" : "none",
-  "profile" : "OSCON",
+  "profile" : "subscriber",
   "key" : h'a4010402421234030c205002e2cc3a9b92855220f255fff1c615bc',
  /{1: 4, 2: h'1234', 3: 12, -1: h'02e2cc3a9b92855220f255fff1c615bc'}/
   "cnf" : [
@@ -422,7 +422,7 @@ TODO: expand on security and Privacy considerations
 
 # IANA Considerations
 
-TODO: "key" parameter, OSCON profile identifier
+TODO: "key" parameter, "publisher" and "subscriber" profile identifiers
 
 # Acknowledgments
 
