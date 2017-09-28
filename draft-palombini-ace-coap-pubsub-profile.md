@@ -25,7 +25,7 @@ author:
 
 normative:
 
-  I-D.ietf-cose-msg:
+  RFC8152:
   RFC2119:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-core-coap-pubsub:
@@ -189,7 +189,7 @@ After retrieving the AS2 address, the Client sends a Topic Keying Material Reque
 * the cnf parameter containing the Client's COSE key, if the Client is a publisher, and
 * OPTIONALLY, other additional parameters such as the client id or the algorithm.
 
-Note that, if present, the algorithm MUST be a Content Encryption Algorithm, as defined in Section 10 of {{I-D.ietf-cose-msg}}.
+Note that, if present, the algorithm MUST be a Content Encryption Algorithm, as defined in Section 10 of {{RFC8152}}.
 An example of the payload of a Topic Keying Material Request for a Publisher is specified in {{fig-post-as2}}.
 
 ~~~~~~~~~~~~
@@ -220,7 +220,7 @@ The AS2 response contains an empty token and the keying material to protect the 
 
 TODO: define "key" parameter following ACE framework
 
-The "key" parameter value MUST be a serialized COSE Key (see Section 7 of {{I-D.ietf-cose-msg}}), with the following values:
+The "key" parameter value MUST be a serialized COSE Key (see Section 7 of {{RFC8152}}), with the following values:
 
 * kty with value 4 (symmetric)
 * alg with value defined by the AS2 (Content Encryption Algorithm)
@@ -287,7 +287,7 @@ Step (E) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 * The POST request to the /token endpoint on AS2, does not contain the cnf parameter containing the Client's COSE key.
 
-* The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{I-D.ietf-cose-msg}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers
+* The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers
 
 An example of the payload of a Topic Keying Material Request and corresponding response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
 
@@ -343,7 +343,7 @@ This section specifies the communication Publisher-Broker and Subscriber-Broker,
 {: artwork-align="center"}
 
 The (F) message corresponds to the publication of a topic on the Broker.
-The publication (the resource representation) is protected with COSE ({{I-D.ietf-cose-msg}}).
+The publication (the resource representation) is protected with COSE ({{RFC8152}}).
 The (G) message is the subscription of the Subscriber, which is unprotected.
 The (H) message is the response from the Broker, where the publication is protected with COSE.
 
@@ -363,17 +363,17 @@ The flow graph is presented below.
 
 ## Using COSE Objects to protect the resource representation
 
-The Publisher uses the symmetric COSE Key received from AS2 in exchange B ({{retr-cosekey}}) to protect the payload of the PUBLISH operation (Section 4.3 of {{I-D.ietf-core-coap-pubsub}}). Specifically, the COSE Key is used to create a COSE\_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B ({{retr-cosekey}}) to countersign the COSE Object as specified in Section 4.5 of {{I-D.ietf-cose-msg}}. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.
+The Publisher uses the symmetric COSE Key received from AS2 in exchange B ({{retr-cosekey}}) to protect the payload of the PUBLISH operation (Section 4.3 of {{I-D.ietf-core-coap-pubsub}}). Specifically, the COSE Key is used to create a COSE\_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B ({{retr-cosekey}}) to countersign the COSE Object as specified in Section 4.5 of {{RFC8152}}. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.
 
 The Subscriber uses the kid in the countersignature field in the COSE object to retrieve the right public key to verify the countersignature. It then uses the symmetric key received from AS2 to verify and decrypt the publication received in the payload of the CoAP Notification from the Broker.
 
 The COSE object is constructed in the following way:
 
-* The protected Headers (as described in Section 3 of {{I-D.ietf-cose-msg}}) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in {{retr-cosekey}} and MUST contain the content encryption algorithm 
+* The protected Headers (as described in Section 3 of {{RFC8152}}) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in {{retr-cosekey}} and MUST contain the content encryption algorithm 
 * The unprotected Headers MUST contain the IV and the counter signature that includes:
   - the algorithm (same value as in the asymmetric COSE Key received in (B)) in the protected header
   - the kid (same value as the kid of the asymmetric COSE Key received in (B)) in the unprotected header
-  - the signature computed as specified in Section 4.5 of {{I-D.ietf-cose-msg}}
+  - the signature computed as specified in Section 4.5 of {{RFC8152}}
 * The ciphertext, computed over the plaintext that MUST contain the CoAP payload.
 
 The external_aad, when using AEAD, is an empty string.
@@ -406,7 +406,7 @@ An example is given in {{fig-cose-ex}}
 {: #fig-cose-ex title="Example of COSE Object sent in the payload of a PUBLISH operation"}
 {: artwork-align="center"}
 
-The encryption and decryption operations are described in sections 5.3 and 5.4 of {{I-D.ietf-cose-msg}}.
+The encryption and decryption operations are described in sections 5.3 and 5.4 of {{RFC8152}}.
 
 # Security Considerations
 
