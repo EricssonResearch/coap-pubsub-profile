@@ -4,8 +4,8 @@
 
 ACE Working Group                                           F. Palombini
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                           July 04, 2017
-Expires: January 5, 2018
+Intended status: Standards Track                      September 28, 2017
+Expires: April 1, 2018
 
 
      CoAP Pub-Sub Profile for Authentication and Authorization for
@@ -30,14 +30,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 5, 2018.
+   This Internet-Draft will expire on April 1, 2018.
 
 Copyright Notice
 
@@ -46,16 +46,16 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
 
 
 
-Palombini                Expires January 5, 2018                [Page 1]
+Palombini                 Expires April 1, 2018                 [Page 1]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -73,13 +73,13 @@ Table of Contents
    4.  Subscriber Profile  . . . . . . . . . . . . . . . . . . . . .   8
    5.  Pub-Sub Protected Communication . . . . . . . . . . . . . . .   9
      5.1.  Using COSE Objects to protect the resource representation  10
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
    8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  12
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Palombini                Expires January 5, 2018                [Page 2]
+Palombini                 Expires April 1, 2018                 [Page 2]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
                 +----------------+   +----------------+
@@ -165,9 +165,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 3]
+Palombini                 Expires April 1, 2018                 [Page 3]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    +------------+             +------------+              +------------+
@@ -221,9 +221,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 4]
+Palombini                 Expires April 1, 2018                 [Page 4]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    In detail:
@@ -277,9 +277,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 5]
+Palombini                 Expires April 1, 2018                 [Page 5]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    After retrieving the AS2 address, the Client sends a Topic Keying
@@ -301,9 +301,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
       the algorithm.
 
    Note that, if present, the algorithm MUST be a Content Encryption
-   Algorithm, as defined in Section 10 of [I-D.ietf-cose-msg].  An
-   example of the payload of a Topic Keying Material Request for a
-   Publisher is specified in Figure 4.
+   Algorithm, as defined in Section 10 of [RFC8152].  An example of the
+   payload of a Topic Keying Material Request for a Publisher is
+   specified in Figure 4.
 
    {
      "grant_type" : "client_credentials",
@@ -333,9 +333,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 6]
+Palombini                 Expires April 1, 2018                 [Page 6]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    The AS2 response contains an empty token and the keying material to
@@ -346,7 +346,7 @@ Internet-Draft             coap-pubsub-profile                 July 2017
    TODO: define "key" parameter following ACE framework
 
    The "key" parameter value MUST be a serialized COSE Key (see
-   Section 7 of [I-D.ietf-cose-msg]), with the following values:
+   Section 7 of [RFC8152]), with the following values:
 
    o  kty with value 4 (symmetric)
 
@@ -389,9 +389,9 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 7]
+Palombini                 Expires April 1, 2018                 [Page 7]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
 4.  Subscriber Profile
@@ -429,9 +429,8 @@ Internet-Draft             coap-pubsub-profile                 July 2017
       the cnf parameter containing the Client's COSE key.
 
    o  The AS2 response contains a "cnf" parameter whose value is set to
-      a COSE Key Set, (Section 7 of [I-D.ietf-cose-msg]) i.e. an array
-      of COSE Keys, which contains the public keys of all authorized
-      Publishers
+      a COSE Key Set, (Section 7 of [RFC8152]) i.e. an array of COSE
+      Keys, which contains the public keys of all authorized Publishers
 
    An example of the payload of a Topic Keying Material Request and
    corresponding response for a Subscriber is specified in Figure 8 and
@@ -445,9 +444,10 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 8]
+
+Palombini                 Expires April 1, 2018                 [Page 8]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
                   {
@@ -501,17 +501,16 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 
 
-Palombini                Expires January 5, 2018                [Page 9]
+Palombini                 Expires April 1, 2018                 [Page 9]
 
-Internet-Draft             coap-pubsub-profile                 July 2017
+Internet-Draft             coap-pubsub-profile            September 2017
 
 
    The (F) message corresponds to the publication of a topic on the
    Broker.  The publication (the resource representation) is protected
-   with COSE ([I-D.ietf-cose-msg]).  The (G) message is the subscription
-   of the Subscriber, which is unprotected.  The (H) message is the
-   response from the Broker, where the publication is protected with
-   COSE.
+   with COSE ([RFC8152]).  The (G) message is the subscription of the
+   Subscriber, which is unprotected.  The (H) message is the response
+   from the Broker, where the publication is protected with COSE.
 
    The flow graph is presented below.
 
@@ -534,8 +533,8 @@ Internet-Draft             coap-pubsub-profile                 July 2017
    algorithm specified by AS2.  The Publisher uses the private key
    corresponding to the public key sent to the AS2 in exchange B
    (Section 3.1) to countersign the COSE Object as specified in
-   Section 4.5 of [I-D.ietf-cose-msg].  The CoAP payload is replaced by
-   the COSE object before the publication is sent to the Broker.
+   Section 4.5 of [RFC8152].  The CoAP payload is replaced by the COSE
+   object before the publication is sent to the Broker.
 
    The Subscriber uses the kid in the countersignature field in the COSE
    object to retrieve the right public key to verify the
@@ -545,31 +544,28 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
    The COSE object is constructed in the following way:
 
-   o  The protected Headers (as described in Section 3 of
-      [I-D.ietf-cose-msg]) MAY contain the kid parameter, with value the
-      kid of the symmetric COSE Key received in Section 3.1 and MUST
-      contain the content encryption algorithm
+   o  The protected Headers (as described in Section 3 of [RFC8152]) MAY
+      contain the kid parameter, with value the kid of the symmetric
+      COSE Key received in Section 3.1 and MUST contain the content
+      encryption algorithm
 
    o  The unprotected Headers MUST contain the IV and the counter
       signature that includes:
 
-
-
-
-
-Palombini                Expires January 5, 2018               [Page 10]
-
-Internet-Draft             coap-pubsub-profile                 July 2017
-
-
       *  the algorithm (same value as in the asymmetric COSE Key
          received in (B)) in the protected header
+
+
+
+Palombini                 Expires April 1, 2018                [Page 10]
+
+Internet-Draft             coap-pubsub-profile            September 2017
+
 
       *  the kid (same value as the kid of the asymmetric COSE Key
          received in (B)) in the unprotected header
 
-      *  the signature computed as specified in Section 4.5 of
-         [I-D.ietf-cose-msg]
+      *  the signature computed as specified in Section 4.5 of [RFC8152]
 
    o  The ciphertext, computed over the plaintext that MUST contain the
       CoAP payload.
@@ -604,19 +600,7 @@ Internet-Draft             coap-pubsub-profile                 July 2017
                                  operation
 
    The encryption and decryption operations are described in sections
-   5.3 and 5.4 of [I-D.ietf-cose-msg].
-
-
-
-
-
-
-
-
-Palombini                Expires January 5, 2018               [Page 11]
-
-Internet-Draft             coap-pubsub-profile                 July 2017
-
+   5.3 and 5.4 of [RFC8152].
 
 6.  Security Considerations
 
@@ -625,6 +609,15 @@ Internet-Draft             coap-pubsub-profile                 July 2017
    for small constrained devices.  Moreover, all Subscribers must be
    able to access the public keys of all the Publishers to a specific
    topic to be able to verify the publications.  Such a database could
+
+
+
+
+Palombini                 Expires April 1, 2018                [Page 11]
+
+Internet-Draft             coap-pubsub-profile            September 2017
+
+
    be set up and managed by the same entity having control of the topic,
    i.e. AS2.
 
@@ -662,25 +655,24 @@ Internet-Draft             coap-pubsub-profile                 July 2017
 
 9.  References
 
-
-
-
-
-
-
-
-Palombini                Expires January 5, 2018               [Page 12]
-
-Internet-Draft             coap-pubsub-profile                 July 2017
-
-
 9.1.  Normative References
 
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-06 (work in progress), March 2017.
+              authz-07 (work in progress), August 2017.
+
+
+
+
+
+
+
+Palombini                 Expires April 1, 2018                [Page 12]
+
+Internet-Draft             coap-pubsub-profile            September 2017
+
 
    [I-D.ietf-core-coap-pubsub]
               Koster, M., Keranen, A., and J. Jimenez, "Publish-
@@ -688,14 +680,14 @@ Internet-Draft             coap-pubsub-profile                 July 2017
               (CoAP)", draft-ietf-core-coap-pubsub-02 (work in
               progress), July 2017.
 
-   [I-D.ietf-cose-msg]
-              Schaad, J., "CBOR Object Signing and Encryption (COSE)",
-              draft-ietf-cose-msg-24 (work in progress), November 2016.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
+              RFC 8152, DOI 10.17487/RFC8152, July 2017,
+              <https://www.rfc-editor.org/info/rfc8152>.
 
 9.2.  Informative References
 
@@ -718,17 +710,10 @@ Internet-Draft             coap-pubsub-profile                 July 2017
               progress), October 2015.
 
    [I-D.seitz-ace-oscoap-profile]
-              Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
-              profile of ACE", draft-seitz-ace-oscoap-profile-03 (work
-              in progress), June 2017.
-
-
-
-
-Palombini                Expires January 5, 2018               [Page 13]
-
-Internet-Draft             coap-pubsub-profile                 July 2017
-
+              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCOAP
+              profile of the Authentication and Authorization for
+              Constrained Environments Framework", draft-seitz-ace-
+              oscoap-profile-04 (work in progress), July 2017.
 
 Author's Address
 
@@ -740,45 +725,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Palombini                Expires January 5, 2018               [Page 14]
+Palombini                 Expires April 1, 2018                [Page 13]
