@@ -50,6 +50,8 @@ This specification defines a profile for authentication and authorization for pu
 
 This specification defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework {{I-D.ietf-ace-oauth-authz}}. The pub-sub scenario is described in {{I-D.ietf-core-coap-pubsub}}. 
 
+<!-- I think you should give a (very) brief introduction into the pub sub system here rather than assuming that people are going to read the pub/sub draft first. -->
+
 ## Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -60,6 +62,8 @@ Readers are expected to be familiar with the terms and concepts
 described in {{I-D.ietf-ace-oauth-authz}} and {{I-D.ietf-core-coap-pubsub}}.
 
 # Overview {#overview}
+
+<!-- I have a slight problem with the title of this section.  To me I would expect an "Overview" and an "Introduction" to be the same section.  Think about combining the sections together or rename this section to be more specific. -->
 
 The objective of this specification is to specify how to protect a CoAP pub-sub communication, as described in {{I-D.ietf-core-coap-pubsub}}, using Ace framework ({{I-D.ietf-ace-oauth-authz}}) and profiles ({{I-D.gerdes-ace-dtls-authorize}}, {{I-D.seitz-ace-oscoap-profile}}).
 
@@ -93,6 +97,9 @@ The AS1 hosts the policies about the Broker: what endpoints are allowed to Publi
 The AS2 hosts the policies about the topic: what endpoints are allowed to access what topic.
 There are four phases, the first three can be done in parallel.
 
+<!-- You need to expand and define RS and AS on first usage.-->
+<!-- One of the things that I am not currently happy with is that you are looking at AS1 and AS2 as being independent appliers of access control logic without any communication between them.  I think that AS1 needs the ability to give policy to AS2 on a topic after it has been created and before any subscribers get keys.  In the case they are co-resident this is trivial, in other cases it may not be. -->
+
 1. The Publisher requests publishing access to a broker at the AS1, and communicates with the Broker to set up security.
 2. The Publisher requests access to a specific topic at the AS2
 3. The Subscriber requests access to a specific topic at the AS2.
@@ -100,6 +107,11 @@ There are four phases, the first three can be done in parallel.
 
 This scenario requires the setup of 2 different security associations: on the one hand, the Publisher has a security association with the Broker, to protect the communication and securely authorize the Publisher to publish on a topic (Security Association 1). On the other hand, the Publisher has a security association with the Subscriber, to protect the publication content itself (Security Association 2).
 The Security Association 1 is set up using AS1, the Security Association 2 is set up using AS2.
+
+<!-- this is a nit - I think that you want a different term than scenario here. -->
+<!-- It is not clear to me that your allocation of roles to AS1 and
+AS2 I correct.  If you have a second publisher, does it need to talk to both
+AS1 and AS2 or just to AS2?  Is this really an AS1 controls creation of topics and AS2 controls publishing and subscribing to topics?  If the publisher loses its membership in the group for any reason, should it be able to publish willy-nilly anyway?  I.e. should AS2 be able to "revoke" the publishers right to publish? -->
 
 ~~~~~~~~~~~~         
 +------------+             +------------+              +------------+  
@@ -114,6 +126,10 @@ The Security Association 1 is set up using AS1, the Security Association 2 is se
       '------------------------------- Security --------------'
                                      Association 2
 ~~~~~~~~~~~~~
+
+<!-- I don't think the picture is correct at the bottom of the section.  You have a Publisher-Subscriber client/client association -->
+<!-- Is there any expectation that the broker should be notified
+on a "revocation" of a publisher's right to publish?  (As opposed to the right just expiring.)  There is no need to enforce subscribers right to subscribe since a key roll over means that they are getting gibberish. -->
 
 # Publisher Profile
 
@@ -142,6 +158,8 @@ In this section, it is specified how the Publisher requests, obtains and communi
 {: #pubsub-1 title="Phase 1: Publisher side"}
 {: artwork-align="center"}
 
+<!-- I would remove 'D' from the picture as it gets a confusion between updating the tokens and publishing content.  It is covered just fine by the core document.  If you are using it as a 'publish' operation, then it does not belong in the first bullet point.  It could also be the difference between pushing the token and getting a session.  Again I don't think these need to be separate, that is clear from the core document and you are not doing anything different. -->
+
 This is a combination of two independent phases:
 
 * one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS {{I-D.gerdes-ace-dtls-authorize}} or OSCOAP {{I-D.seitz-ace-oscoap-profile}}. (A)(C)(D)
@@ -164,6 +182,8 @@ As specified, the Publisher has the role of a CoAP client, the Broker has the ro
 
 This phase is common to both Publisher and Subscriber. To maintain the generality, the Publisher or Subscriber is referred as Client in this section.
 
+<!-- I don't' think that the returned info on the first request is going to be the same for publishers and subscribers.  Not sure what this should really look like. -->
+
 ~~~~~~~~~~~
    Client                            Broker             AS2
       | [----- Resource Request ---->] |                 |
@@ -179,6 +199,9 @@ This phase is common to both Publisher and Subscriber. To maintain the generalit
 {: artwork-align="center"}
 
 Complementary to what is defined in the DTLS profile (section 2.), to determine the AS2 in charge of a topic hosted at the broker, the Broker MAY send the address of both the AS in charge of the topic back to the Client, as a response to a Resource Request (Section 2.1).
+
+<!-- I am unsure what you believe is going to be accomplished by doing a RD lookup.  You can get the name of the resource, but it would not necessarily return the AS1, AS2 strings. -->
+
 Analogously to the DTLS profile, instead of the initial Unauthorized Resource Request message, the Client MAY look up the desired topic in a resource directory (see {{I-D.ietf-core-resource-directory}}).
 
 After retrieving the AS2 address, the Client sends a Topic Keying Material Request, which is a token-less authorization as described in {{I-D.seitz-ace-oauth-authz}}, section 6.5. More specifically, the Client sends a POST request to the /token endpoint on AS2, that MUST contain in the payload:
@@ -188,6 +211,9 @@ After retrieving the AS2 address, the Client sends a Topic Keying Material Reque
 * the scope parameter set to the topic, 
 * the cnf parameter containing the Client's COSE key, if the Client is a publisher, and
 * OPTIONALLY, other additional parameters such as the client id or the algorithm.
+
+<!-- I am not sure that it makes any sense to set an audience.
+If the scope is the topic then all information exists.  The audience really the subscriber. -->
 
 Note that, if present, the algorithm MUST be a Content Encryption Algorithm, as defined in Section 10 of {{RFC8152}}.
 An example of the payload of a Topic Keying Material Request for a Publisher is specified in {{fig-post-as2}}.
@@ -216,7 +242,12 @@ An example of the payload of a Topic Keying Material Request for a Publisher is 
 
 The AS2 verifies that the Client is authorized to access the topic and, if the "cnf" parameter is present, stores the public key of the Client.
 
+<!-- On the unauthorized response, I think you want to be returning different responses to subscriber vs the broker.  A subscriber does not need to know about AS1.  Also I think you should be using the same tag as the base profile for at least one of them - probably the first one you would contact. -->
+
 The AS2 response contains an empty token and the keying material to protect the publication ("key" field in the payload). Moreover, the payload MUST contain the "profile" parameter, set to value "publisher", and the "token_type" set to "none".
+
+<!--why not use the cnf return value for the key?  Also there is no reason to make it a bstr rather than a map. -->
+<!-- need to define a signers_keys element which returns all of the signing keys.  Defined as an array of keys.  Return other signers for multiple publishers-->
 
 TODO: define "key" parameter following ACE framework
 
@@ -226,6 +257,8 @@ The "key" parameter value MUST be a serialized COSE Key (see Section 7 of {{RFC8
 * alg with value defined by the AS2 (Content Encryption Algorithm)
 * k with value the symmetric key value
 * OPTIONALLY, kid with an identifier for the key value
+
+<!-- You state that the algorithm must be a CE algorithm, but I think you mean a signing algorithm. -->
 
 An example for the response is detailed in {{fig-resp-as2}}.
 
@@ -326,7 +359,16 @@ An example of the payload of a Topic Keying Material Request and corresponding r
 {: #fig-resp2-as2 title="Example of Topic Keying Material response payload for a Subscriber"}
 {: artwork-align="center"}
 
+<!-- see above about strings to be returned here. -->
+
 # Pub-Sub Protected Communication
+
+<!-- Need to talk about how to deal with multiple publishers - are you assigning different keys or are you using different IV sections?
+Need to ensure that you don't have an error from using the same key/iv pair. -->
+
+<!-- Are you containing a coap payload or a complete coap message in the payload.  -->
+
+<!-- Do you want to talk about coordination of the observer number and the iv of a message? -->
 
 This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place.
 
