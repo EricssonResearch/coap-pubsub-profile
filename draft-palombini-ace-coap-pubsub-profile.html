@@ -19,20 +19,25 @@
 }
 
 @media screen and (min-width: 1024px) {
-  ul.toc, #rfc\.toc {
+  body>ul.toc, body>#rfc\.toc {
     position: fixed;
     bottom: 0;
     right: 0;
-    right: calc(50vw - 525px);
+    right: calc(50vw - 550px);
     width: 300px;
     z-index: 1;
   }
   #rfc\.toc {
-    top: 15px;
-  }
-  ul.toc {
-    top: 80px;
+    top: 55px;
     overflow: auto;
+    overscroll-behavior: contain;
+  }
+  ul.toc, #rfc\.toc {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>ul.toc {
+    top: 140px;
   }
 
   body {
@@ -41,11 +46,11 @@
 }
 
 body {
-  font: 15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font: 16px "Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #333;
   font-size-adjust: 0.5;
-  line-height: 130%;
-  margin: 25px auto;
+  line-height: 24px;
+  margin: 75px auto;
   max-width: 724px;
 }
 
@@ -58,7 +63,7 @@ body {
   margin: 0.8em 0 0.3em;
 }
 .title { font-size: 36px; }
-h1 { font-size: 30px; }
+h1 { font-size: 36px; }
 h2 { font-size: 24px; }
 h3, h4 { font-size: 18px; }
 h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
@@ -121,10 +126,9 @@ table.header td {
   height: auto;
   line-height: 100%;
 }
-#rfc\.abstract+p {
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 130%;
+#rfc\.abstract+p, #rfc\.abstract p {
+  font-size: 18px;
+  line-height: 27px%;
 }
 
 samp, tt, code, pre {
@@ -192,6 +196,9 @@ ul.empty li {
 hr {
   border: 0;
   border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
 }
 
 a {
@@ -278,27 +285,27 @@ address {
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology">
 <link href="#rfc.section.2" rel="Chapter" title="2 Profile Overview">
-<link href="#rfc.section.3" rel="Chapter" title="3 Publisher Profile">
+<link href="#rfc.section.3" rel="Chapter" title="3 coap_pubsub Profile">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Retrieval of COSE Key for protection of content">
-<link href="#rfc.section.3.2" rel="Chapter" title="3.2 AS1, AS2 Information">
-<link href="#rfc.section.4" rel="Chapter" title="4 Subscriber Profile">
-<link href="#rfc.section.5" rel="Chapter" title="5 Pub-Sub Protected Communication">
-<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Using COSE Objects to protect the resource representation">
-<link href="#rfc.section.6" rel="Chapter" title="6 Security Considerations">
-<link href="#rfc.section.7" rel="Chapter" title="7 IANA Considerations">
-<link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgments">
+<link href="#rfc.section.4" rel="Chapter" title="4 Publisher">
+<link href="#rfc.section.5" rel="Chapter" title="5 Subscriber">
+<link href="#rfc.section.6" rel="Chapter" title="6 Pub-Sub Protected Communication">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Using COSE Objects to protect the resource representation">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations">
 <link href="#rfc.references" rel="Chapter" title="9 References">
 <link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References">
 <link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References">
+<link href="#rfc.acknowledgments" rel="Chapter">
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.8.2 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.9.6 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Palombini, F." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-palombini-ace-coap-pubsub-profile-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-03-01" />
   <meta name="dct.abstract" content="This specification defines a profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication." />
   <meta name="description" content="This specification defines a profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication." />
 
@@ -319,10 +326,10 @@ address {
 </tr>
 <tr>
 <td class="left">Intended status: Standards Track</td>
-<td class="right">October 13, 2017</td>
+<td class="right">March 01, 2018</td>
 </tr>
 <tr>
-<td class="left">Expires: April 16, 2018</td>
+<td class="left">Expires: September 2, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -339,9 +346,9 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 16, 2018.</p>
+<p>This Internet-Draft will expire on September 2, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
@@ -355,23 +362,21 @@ address {
 </li>
 </ul><li>2.   <a href="#rfc.section.2">Profile Overview</a>
 </li>
-<li>3.   <a href="#rfc.section.3">Publisher Profile</a>
+<li>3.   <a href="#rfc.section.3">coap_pubsub Profile</a>
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Retrieval of COSE Key for protection of content</a>
 </li>
-<li>3.2.   <a href="#rfc.section.3.2">AS1, AS2 Information</a>
+</ul><li>4.   <a href="#rfc.section.4">Publisher</a>
 </li>
-</ul><li>4.   <a href="#rfc.section.4">Subscriber Profile</a>
+<li>5.   <a href="#rfc.section.5">Subscriber</a>
 </li>
-<li>5.   <a href="#rfc.section.5">Pub-Sub Protected Communication</a>
+<li>6.   <a href="#rfc.section.6">Pub-Sub Protected Communication</a>
 </li>
-<ul><li>5.1.   <a href="#rfc.section.5.1">Using COSE Objects to protect the resource representation</a>
+<ul><li>6.1.   <a href="#rfc.section.6.1">Using COSE Objects to protect the resource representation</a>
 </li>
-</ul><li>6.   <a href="#rfc.section.6">Security Considerations</a>
+</ul><li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>
-<li>7.   <a href="#rfc.section.7">IANA Considerations</a>
-</li>
-<li>8.   <a href="#rfc.section.8">Acknowledgments</a>
+<li>8.   <a href="#rfc.section.8">IANA Considerations</a>
 </li>
 <li>9.   <a href="#rfc.references">References</a>
 </li>
@@ -379,7 +384,9 @@ address {
 </li>
 <li>9.2.   <a href="#rfc.references.2">Informative References</a>
 </li>
-</ul><li><a href="#rfc.authors">Author's Address</a>
+</ul><li><a href="#rfc.acknowledgments">Acknowledgments</a>
+</li>
+<li><a href="#rfc.authors">Author's Address</a>
 </li>
 
 
@@ -393,11 +400,11 @@ address {
 <a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
 </h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in RFC 2119 <a href="#RFC2119" class="xref">[RFC2119]</a>.</p>
-<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> and <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>. In particular, analogously to <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, terminology for entities in the architecture is defined in OAuth 2.0 <a href="#RFC6749" class="xref">[RFC6749]</a> and <a href="#I-D.ietf-ace-actors" class="xref">[I-D.ietf-ace-actors]</a>, such as client (C), resource server (RS), and authorization server (AS).</p>
+<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, TODO: I-D.palombini-ace-key-groupcomm and <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>. In particular, analogously to <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, terminology for entities in the architecture such as Client (C), Resource Server (RS), and Authorization Server (AS) is defined in OAuth 2.0 <a href="#RFC6749" class="xref">[RFC6749]</a> and <a href="#I-D.ietf-ace-actors" class="xref">[I-D.ietf-ace-actors]</a>, and terminology for entities such as the Key Distribution Center (KDC) and Dispatcher in TODO: I-D.palombini-ace-key-groupcomm.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#overview" id="overview">Profile Overview</a>
 </h1>
-<p id="rfc.section.2.p.1">The objective of this document is to specify how to protect a CoAP pub-sub communication, as described in <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>, using Ace framework (<a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>) and profiles (<a href="#I-D.gerdes-ace-dtls-authorize" class="xref">[I-D.gerdes-ace-dtls-authorize]</a>, <a href="#I-D.seitz-ace-oscoap-profile" class="xref">[I-D.seitz-ace-oscoap-profile]</a>).</p>
+<p id="rfc.section.2.p.1">The objective of this document is to specify how to protect a CoAP pub-sub communication, as described in <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>, using TODO: I-D.palombini-ace-key-groupcomm, which itself expands the Ace framework (<a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>), and profiles (<a href="#I-D.ietf-ace-dtls-authorize" class="xref">[I-D.ietf-ace-dtls-authorize]</a>, <a href="#I-D.ietf-ace-oscore-profile" class="xref">[I-D.ietf-ace-oscore-profile]</a>).</p>
 <p id="rfc.section.2.p.2">The architecture of the scenario is shown in <a href="#archi" class="xref">Figure 1</a>.</p>
 <div id="rfc.figure.1"></div>
 <div id="archi"></div>
@@ -421,16 +428,17 @@ address {
 +------------+             +------------+              +------------+
 </pre>
 <p class="figure">Figure 1: Architecture CoAP pubsub with Authorization Servers</p>
-<p id="rfc.section.2.p.3">The RS is the broker, which contains the topic.  The AS1 hosts the policies about the Broker: what endpoints are allowed to Publish on the Broker.  The AS2 hosts the policies about the topic: what endpoints are allowed to access what topic.  There are four phases, the first three can be done in parallel.</p>
+<p id="rfc.section.2.p.3">The RS is the broker, which contains the topic. This node corresponds to the Dispatcher, in TODO: I-D.palombini-ace-key-groupcomm.  The AS1 hosts the policies about the Broker: what endpoints are allowed to Publish on the Broker. The Clients access this node to get write access to the Broker.  The AS2 hosts the policies about the topic: what endpoints are allowed to access what topic. This node represents both the AS and Key Distribution Center roles from TODO: I-D.palombini-ace-key-groupcomm.</p>
+<p id="rfc.section.2.p.4">There are four phases, the first three can be done in parallel.</p>
 <p></p>
 
 <ol>
-<li>The Publisher requests publishing access to a broker at the AS1, and communicates with the Broker to set up security.</li>
+<li>The Publisher requests publishing access to the Broker at the AS1, and communicates with the Broker to set up security.</li>
 <li>The Publisher requests access to a specific topic at the AS2</li>
 <li>The Subscriber requests access to a specific topic at the AS2.</li>
 <li>The Publisher and the Subscriber securely post to and get publications from the Broker.</li>
 </ol>
-<p id="rfc.section.2.p.5">This exchange aims at setting up of 2 different security associations: on the one hand, the Publisher has a security association with the Broker, to protect the communication and securely authorize the Publisher to publish on a topic (Security Association 1). On the other hand, the Publisher has a security association with the Subscriber, to protect the publication content itself (Security Association 2).  The Security Association 1 is set up using AS1, the Security Association 2 is set up using AS2.</p>
+<p id="rfc.section.2.p.6">This exchange aims at setting up 2 different security associations: on the one hand, the Publisher has a security association with the Broker, to protect the communication and securely authorize the Publisher to publish on a topic (Security Association 1). On the other hand, the Publisher has a security association with the Subscriber, to protect the publication content itself (Security Association 2).  The Security Association 1 is set up using AS1 and a profile of <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, the Security Association 2 is set up using AS2 and TODO: I-D.palombini-ace-key-groupcomm.</p>
 <pre>
 +------------+             +------------+              +------------+  
 |   CoAP     |             |   CoAP     |              |    CoAP    | 
@@ -444,11 +452,91 @@ address {
       '------------------------------- Security --------------'
                                      Association 2
 </pre>
+<p id="rfc.section.2.p.7">Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this profile.</p>
 <h1 id="rfc.section.3">
-<a href="#rfc.section.3">3.</a> <a href="#publisher-profile" id="publisher-profile">Publisher Profile</a>
+<a href="#rfc.section.3">3.</a> <a href="#profile" id="profile">coap_pubsub Profile</a>
 </h1>
-<p id="rfc.section.3.p.1">In this section, it is specified how the Publisher requests, obtains and communicates to the Broker the access token, as well as the retrieval of the keying material to protect the publication.</p>
+<p id="rfc.section.3.p.1">This profile uses TODO: I-D.palombini-ace-key-groupcomm, which expands the ACE framework. This document specifies which exact parameters from TODO: I-D.palombini-ace-key-groupcomm have to be used, and the values for each parameter.</p>
+<p id="rfc.section.3.p.2">The Publisher and the Subscriber map to the Client in TODO: I-D.palombini-ace-key-groupcomm, the AS2 maps to the AS and to the KDC, the Broker maps to the Dispatcher.</p>
+<p id="rfc.section.3.p.3">Note that both publishers and subscribers use the same profile, called &#8220;coap_pubsub&#8221;.</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#retr-cosekey" id="retr-cosekey">Retrieval of COSE Key for protection of content</a>
+</h1>
+<p id="rfc.section.3.1.p.1">This phase is common to both Publisher and Subscriber. To maintain the generality, the Publisher or Subscriber is referred as Client in this section.</p>
 <div id="rfc.figure.2"></div>
+<div id="B"></div>
+<pre>
+   Client                            Broker             AS2
+      | [----- Resource Request ----&gt;] |                 |
+      |                                |                 |
+      | [&lt;-- AS1, AS2 Information ---] |                 |
+      |                                                  |
+      | -- Authorization + Key Distribution Request ---&gt; |
+      |                                                  |
+      | &lt;-- Authorization + Key Distribution Response -- |
+      |                                                  |
+</pre>
+<p class="figure">Figure 2: B: Access request - response</p>
+<p id="rfc.section.3.1.p.2">Complementary to what is defined in <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> (Section 5.1.1), to determine the AS2 in charge of a topic hosted at the Broker, the Broker MAY send the address of both the AS in charge of the topic back to the Client in the &#8216;AS&#8217; parameter in the AS Information, as a response to an Unauthorized Resource Request (Section 5.1.2). An example using CBOR diagnostic notation is given below:</p>
+<div id="rfc.figure.3"></div>
+<div id="AS-info-ex"></div>
+<pre>
+    4.01 Unauthorized
+    Content-Format: application/ace+cbor
+    {"AS1": "coaps://as1.example.com/token",
+     "AS2": "coaps://as2.example.com/pubsubkey"}
+</pre>
+<p class="figure">Figure 3: AS1, AS2 Information example</p>
+<p id="rfc.section.3.1.p.3">Analogously to what is defined in <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, instead of the initial Unauthorized Resource Request message, the Client MAY look up the desired topic in a resource directory (see <a href="#I-D.ietf-core-resource-directory" class="xref">[I-D.ietf-core-resource-directory]</a>).</p>
+<p id="rfc.section.3.1.p.4">After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in TODO: I-D.palombini-ace-key-groupcomm, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary.</p>
+<p id="rfc.section.3.1.p.5">More specifically, the Client sends a POST request to the /token endpoint on AS2, that MUST contain in the payload (formatted as a CBOR map):</p>
+<p></p>
+
+<ul>
+<li>the following fields from the Authorization Request (Section 3.1 of TODO: I-D.palombini-ace-key-groupcomm): <ul>
+<li>the grant type set to &#8220;client_credentials&#8221;,</li>
+<li>OPTIONALLY, if needed, other additional parameters such as &#8220;Client_id&#8221;</li>
+</ul>
+</li>
+<li>the following fields from the Key Distribution Request (Section 4.1 of TODO: I-D.palombini-ace-key-groupcomm): <ul>
+<li>the client_cred parameter containing the Client&#8217;s public key, if the Client needs to directly send that to the AS2,</li>
+<li>the scope parameter set to a CBOR array containing the broker&#8217;s topic as first element and the string &#8220;publisher&#8221; for publishers and &#8220;subscriber&#8221; for subscribers as second element</li>
+<li>the get_pub_keys parameter set to 0x01 if the Client needs to retrieve the public keys of the other pubsub members</li>
+<li>OPTIONALLY, if needed, the pub_keys_repos parameters</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.3.1.p.7">Note that the alg parameter in the client_cred COSE_Key MUST be a signing algorithm, as defined in section 8 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
+<p id="rfc.section.3.1.p.8">Examples of the payload of a Authorization + Key Distribution Request are specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-post2-as2" class="xref">Figure 8</a>.</p>
+<p id="rfc.section.3.1.p.9">The AS2 verifies that the Client is authorized to access the topic and, if the &#8216;client_cred&#8217; parameter is present, stores the public key of the Client.</p>
+<p id="rfc.section.3.1.p.10">The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of TODO: I-D.palombini-ace-key-groupcomm. The payload (formatted as a CBOR map) MUST contain:</p>
+<p></p>
+
+<ul>
+<li>the following fields from the Authorization Response (Section 3.2 of TODO: I-D.palombini-ace-key-groupcomm): <ul>
+<li>profile set to &#8220;coap_pubsub&#8221;</li>
+<li>scope parameter (optionally), set to a CBOR array containing the broker&#8217;s topic as first element and the string &#8220;publisher&#8221; for publishers and &#8220;subscriber&#8221; for subscribers as second element</li>
+</ul>
+</li>
+<li>the following fields from the Key Distribution Response (Section 4.2 of TODO: I-D.palombini-ace-key-groupcomm): <ul>
+<li>&#8220;key&#8221; parameter including: <ul>
+<li>kty with value 4 (symmetric)</li>
+<li>alg with value defined by the AS2 (Content Encryption Algorithm)</li>
+<li>Base IV with value defined by the AS2</li>
+<li>k with value the symmetric key value</li>
+<li>OPTIONALLY, kid with an identifier for the key value</li>
+</ul>
+</li>
+<li>&#8220;pub_keys&#8221;, containing the public keys of all authorized signing members, if the &#8220;get_pub_keys&#8221; parameter was present and set to 0x01 in the Authorization + Key Distribution Request</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.3.1.p.12">Examples for the response payload are detailed in <a href="#fig-resp-as2" class="xref">Figure 6</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#publisher" id="publisher">Publisher</a>
+</h1>
+<p id="rfc.section.4.p.1">In this section, it is specified how the Publisher requests, obtains and communicates to the Broker the access token, as well as the retrieval of the keying material to protect the publication.</p>
+<div id="rfc.figure.4"></div>
 <div id="pubsub-1"></div>
 <pre>
              +----------------+   +----------------+
@@ -469,58 +557,28 @@ address {
 | Publisher  |             |   Broker   |
 +------------+             +------------+
 </pre>
-<p class="figure">Figure 2: Phase 1: Publisher side</p>
-<p id="rfc.section.3.p.2">This is a combination of two independent phases:</p>
+<p class="figure">Figure 4: Phase 1: Publisher side</p>
+<p id="rfc.section.4.p.2">This is a combination of two independent phases:</p>
 <p></p>
 
 <ul>
-<li>one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS <a href="#I-D.gerdes-ace-dtls-authorize" class="xref">[I-D.gerdes-ace-dtls-authorize]</a> or OSCOAP <a href="#I-D.seitz-ace-oscoap-profile" class="xref">[I-D.seitz-ace-oscoap-profile]</a>. (A)(C)</li>
+<li>one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS <a href="#I-D.ietf-ace-dtls-authorize" class="xref">[I-D.ietf-ace-dtls-authorize]</a> or OSCOAP <a href="#I-D.ietf-ace-oscore-profile" class="xref">[I-D.ietf-ace-oscore-profile]</a>. (A)(C)</li>
 <li>the other is the Publisher&#8217;s retrieval of keying material to protect the publication. (B)</li>
 </ul>
-<p id="rfc.section.3.p.4">In detail:</p>
-<p id="rfc.section.3.p.5">(A) corresponds to the Access Token Request and Response between Publisher and Authorization Server to retrieve the Access Token and RS (Broker) Information.  As specified, the Publisher has the role of a CoAP client, the Broker has the role of the CoAP server.</p>
-<p id="rfc.section.3.p.6">(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols such as EDHOC. Depending on the application, there may not be the need for this set up phase: for example, if OSCOAP is used directly and not with EDHOC first.</p>
-<p id="rfc.section.3.p.7">(A) and (C) details are specified in the profile used.</p>
-<p id="rfc.section.3.p.8">(B) corresponds to the retrieval of the keying material to protect the publication. The detailed message flow is defined below.</p>
-<h1 id="rfc.section.3.1">
-<a href="#rfc.section.3.1">3.1.</a> <a href="#retr-cosekey" id="retr-cosekey">Retrieval of COSE Key for protection of content</a>
-</h1>
-<p id="rfc.section.3.1.p.1">This phase is common to both Publisher and Subscriber. To maintain the generality, the Publisher or Subscriber is referred as Client in this section.</p>
-<div id="rfc.figure.3"></div>
-<div id="B"></div>
-<pre>
-   Client                            Broker             AS2
-      | [----- Resource Request ----&gt;] |                 |
-      |                                |                 |
-      | [&lt;-- AS1, AS2 Information ---] |                 |
-      |                                                  |
-      | ------- Topic Keying Material Request ---------&gt; |
-      |                                                  |
-      | &lt;------------ Keying Material ------------------ |
-      |                                                  |
-</pre>
-<p class="figure">Figure 3: B: Access request - response</p>
-<p id="rfc.section.3.1.p.2">Complementary to what is defined in the DTLS profile (section 2.), to determine the AS2 in charge of a topic hosted at the broker, the Broker MAY send the address of both the AS in charge of the topic back to the Client, as a response to a Resource Request (Section 2.1).</p>
-<p id="rfc.section.3.1.p.3">Analogously to the DTLS profile, instead of the initial Unauthorized Resource Request message, the Client MAY look up the desired topic in a resource directory (see <a href="#I-D.ietf-core-resource-directory" class="xref">[I-D.ietf-core-resource-directory]</a>).</p>
-<p id="rfc.section.3.1.p.4">After retrieving the AS2 address, the Client sends a Topic Keying Material Request, which is a token-less authorization as described in <a href="#I-D.seitz-ace-oauth-authz" class="xref">[I-D.seitz-ace-oauth-authz]</a>, section 6.5. More specifically, the Client sends a POST request to the /token endpoint on AS2, that MUST contain in the payload:</p>
-<p></p>
-
-<ul>
-<li>the grant type set to &#8220;client_credentials&#8221;,</li>
-<li>the audience parameter set to the broker&#8217;s topic,</li>
-<li>the cnf parameter containing the Client&#8217;s COSE key, if the Client is a publisher, and</li>
-<li>OPTIONALLY, other additional parameters such as the client id.</li>
-</ul>
-<p id="rfc.section.3.1.p.6">Note that the alg parameter in the COSE_Key MUST be a signing algorithm, as defined in section 8 of <a href="#RFC8152" class="xref">[RFC8152]</a>.  An example of the payload of a Topic Keying Material Request for a Publisher is specified in <a href="#fig-post-as2" class="xref">Figure 4</a>.</p>
-<div id="rfc.figure.4"></div>
+<p id="rfc.section.4.p.4">In detail:</p>
+<p id="rfc.section.4.p.5">(A) corresponds to the Access Token Request and Response between Publisher and Authorization Server to retrieve the Access Token and RS (Broker) Information.  As specified, the Publisher has the role of a CoAP client, the Broker has the role of the CoAP server.</p>
+<p id="rfc.section.4.p.6">(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols. Depending on the application, there may not be the need for this set up phase: for example, if OSCOAP is used directly.</p>
+<p id="rfc.section.4.p.7">(A) and (C) details are specified in the profile used.</p>
+<p id="rfc.section.4.p.8">(B) corresponds to the retrieval of the keying material to protect the publication, and uses TODO: I-D.palombini-ace-key-groupcomm. The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a>.</p>
+<p id="rfc.section.4.p.9">An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-resp-as2" class="xref">Figure 6</a>.</p>
+<div id="rfc.figure.5"></div>
 <div id="fig-post-as2"></div>
 <pre>
 {
   "grant_type" : "client_credentials",
-  "aud" : "Broker1",
-  "scope" : "Temp",
+  "scope" : ["Broker1/Temp", "publisher"],
   "client_id" : "publisher1",
-  "cnf" : 
+  "client_cred" : 
     { / COSE_Key /
       / type / 1 : 2, / EC2 /
       / kid / 2 : h'11',
@@ -533,50 +591,21 @@ address {
     }
 }
 </pre>
-<p class="figure">Figure 4: Example of Topic Keying Material Request payload for a Publisher</p>
-<p id="rfc.section.3.1.p.7">The AS2 verifies that the Client is authorized to access the topic and, if the &#8220;cnf&#8221; parameter is present, stores the public key of the Client.</p>
-<p id="rfc.section.3.1.p.8">The AS2 response contains an empty token and the keying material to protect the publication (&#8220;key&#8221; field in the payload). Moreover, the payload MUST contain the &#8220;profile&#8221; parameter, set to value &#8220;publisher&#8221;, and the &#8220;token_type&#8221; set to &#8220;none&#8221;.</p>
-<p id="rfc.section.3.1.p.9">TODO: define &#8220;key&#8221; parameter following ACE framework</p>
-<p id="rfc.section.3.1.p.10">The &#8220;key&#8221; parameter value MUST be a COSE Key (see Section 7 of <a href="#RFC8152" class="xref">[RFC8152]</a>), with the following values:</p>
-<p></p>
-
-<ul>
-<li>kty with value 4 (symmetric)</li>
-<li>alg with value defined by the AS2 (Content Encryption Algorithm)</li>
-<li>Base IV with value defined by the AS2</li>
-<li>k with value the symmetric key value</li>
-<li>OPTIONALLY, kid with an identifier for the key value</li>
-</ul>
-<p id="rfc.section.3.1.p.12">An example for the response is detailed in <a href="#fig-resp-as2" class="xref">Figure 5</a>.</p>
-<div id="rfc.figure.5"></div>
+<p class="figure">Figure 5: Authorization + Key Distribution Request payload for a Publisher</p>
+<div id="rfc.figure.6"></div>
 <div id="fig-resp-as2"></div>
 <pre>
 {
-  "access_token" : NULL,
-  "token_type" : "none",
-  "profile" : "publisher",
-  "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', -1: h'02e2cc3a9b92855220f255fff1c615bc'}
+  "profile" : "coap_pubsub",
+  "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
+  -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
 }
 </pre>
-<p class="figure">Figure 5: Example of Topic Keying Material response payload for a Publisher</p>
-<h1 id="rfc.section.3.2">
-<a href="#rfc.section.3.2">3.2.</a> <a href="#as1-as2-information" id="as1-as2-information">AS1, AS2 Information</a>
+<p class="figure">Figure 6: Authorization + Key Distribution Response payload for a Publisher</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#subs-profile" id="subs-profile">Subscriber</a>
 </h1>
-<p id="rfc.section.3.2.p.1">The Client MUST be able to process the following response message from the Broker, in order to retrieve the correct AS1 and AS2 addresses.</p>
-<p id="rfc.section.3.2.p.2">This CoAP message MUST have the following characteristics: the CoAP Code MUST be 4.01 &#8220;Unauthorized&#8221;, the payload MUST be present and MUST include the full URI of both AS. An example using CBOR diagnostic notation is given below:</p>
-<div id="rfc.figure.6"></div>
-<div id="AS-info-ex"></div>
-<pre>
-    4.01 Unauthorized
-    Content-Format: application/ace+cbor
-    {"AS1": "coaps://as1.example.com/token",
-     "AS2": "coaps://as2.example.com/pubsubkey"}
-</pre>
-<p class="figure">Figure 6: AS1, AS2 Information example</p>
-<h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> <a href="#subs-profile" id="subs-profile">Subscriber Profile</a>
-</h1>
-<p id="rfc.section.4.p.1">In this section, it is specified how the Subscriber retrieves the keying material to protect the publication.</p>
+<p id="rfc.section.5.p.1">In this section, it is specified how the Subscriber retrieves the keying material to protect the publication.</p>
 <div id="rfc.figure.7"></div>
 <div id="pubsub-2"></div>
 <pre>
@@ -600,34 +629,34 @@ address {
                                                        +------------+
 </pre>
 <p class="figure">Figure 7: Phase 2: Subscriber side</p>
-<p id="rfc.section.4.p.2">Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication, and is the same as (B) between Publisher and AS2 (<a href="#retr-cosekey" class="xref">Section 3.1</a>), with the following differences:</p>
+<p id="rfc.section.5.p.2">Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication.  The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a></p>
+<p id="rfc.section.5.p.3">This step is the same as (B) between Publisher and AS2 (<a href="#retr-cosekey" class="xref">Section 3.1</a>), with the following differences:</p>
 <p></p>
 
 <ul>
-<li>The POST request to the /token endpoint on AS2, does not contain the cnf parameter containing the Client&#8217;s COSE key.</li>
-<li>The AS2 response contains a &#8220;cnf&#8221; parameter whose value is set to a COSE Key Set, (Section 7 of <a href="#RFC8152" class="xref">[RFC8152]</a>) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers, and the &#8220;profile&#8221; parameter is set to value &#8220;subscriber&#8221;</li>
+<li>The Authorization + Key Distribution Request MUST NOT contain the client_cred parameter, the role element in the &#8216;scope&#8217; parameter MUST be set to &#8220;subscriber&#8221;. The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter get_pub_keys set to 0x01.</li>
+<li>The Authorization + Key Distribution Response MUST contain the pub_keys parameter.</li>
 </ul>
-<p id="rfc.section.4.p.4">An example of the payload of a Topic Keying Material Request and corresponding response for a Subscriber is specified in <a href="#fig-post2-as2" class="xref">Figure 8</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
+<p id="rfc.section.5.p.5">An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in <a href="#fig-post2-as2" class="xref">Figure 8</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
 <div id="rfc.figure.8"></div>
 <div id="fig-post2-as2"></div>
 <pre>
 {
   "grant_type" : "client_credentials",
-  "aud" : "Broker1",
-  "scope" : "Temp",
-  "client_id" : "subscriber1"
+  "scope" : ["Broker1/Temp", "subscriber"],
+  "get_pub_keys" : 0x01
 }
 </pre>
-<p class="figure">Figure 8: Example of Topic Keying Material Request payload for a Subscriber</p>
+<p class="figure">Figure 8: Authorization + Key Distribution Request payload for a Subscriber</p>
 <div id="rfc.figure.9"></div>
 <div id="fig-resp2-as2"></div>
 <pre>
 {
-  "access_token" : NULL,
-  "token_type" : "none",
-  "profile" : "subscriber",
-  "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', -1: h'02e2cc3a9b92855220f255fff1c615bc'},
-  "cnf" : [
+  "profile" : "coap_pubsub",
+  "scope" : ["Broker1/Temp", "subscriber"],
+  "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
+  -1: h'02e2cc3a9b92855220f255fff1c615bc'},
+  "pub_keys" : [
    {
       1 : 2, / type EC2 /
       2 : h'11', / kid /
@@ -641,11 +670,11 @@ address {
   ]
 }
 </pre>
-<p class="figure">Figure 9: Example of Topic Keying Material response payload for a Subscriber</p>
-<h1 id="rfc.section.5">
-<a href="#rfc.section.5">5.</a> <a href="#pub-sub-protected-communication" id="pub-sub-protected-communication">Pub-Sub Protected Communication</a>
+<p class="figure">Figure 9: Authorization + Key Distribution Response payload for a Subscriber</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#pub-sub-protected-communication" id="pub-sub-protected-communication">Pub-Sub Protected Communication</a>
 </h1>
-<p id="rfc.section.5.p.1">This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place.</p>
+<p id="rfc.section.6.p.1">This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place.</p>
 <div id="rfc.figure.10"></div>
 <div id="pubsub-3"></div>
 <pre>
@@ -658,8 +687,8 @@ address {
 +------------+             +------------+              +------------+
 </pre>
 <p class="figure">Figure 10: Phase 3: Secure communication between Publisher and Subscriber</p>
-<p id="rfc.section.5.p.2">The (E) message corresponds to the publication of a topic on the Broker.  The publication (the resource representation) is protected with COSE (<a href="#RFC8152" class="xref">[RFC8152]</a>).  The (F) message is the subscription of the Subscriber, which is unprotected.  The (G) message is the response from the Broker, where the publication is protected with COSE.</p>
-<p id="rfc.section.5.p.3">The flow graph is presented below.</p>
+<p id="rfc.section.6.p.2">The (E) message corresponds to the publication of a topic on the Broker.  The publication (the resource representation) is protected with COSE (<a href="#RFC8152" class="xref">[RFC8152]</a>).  The (F) message is the subscription of the Subscriber, which is unprotected.  The (G) message is the response from the Broker, where the publication is protected with COSE.</p>
+<p id="rfc.section.6.p.3">The flow graph is presented below.</p>
 <div id="rfc.figure.11"></div>
 <div id="E-F-G-ex"></div>
 <pre>
@@ -672,12 +701,12 @@ address {
       |                      |  protected with COSE  |
 </pre>
 <p class="figure">Figure 11: (E), (F), (G): Example of protected communication</p>
-<h1 id="rfc.section.5.1">
-<a href="#rfc.section.5.1">5.1.</a> <a href="#using-cose-objects-to-protect-the-resource-representation" id="using-cose-objects-to-protect-the-resource-representation">Using COSE Objects to protect the resource representation</a>
+<h1 id="rfc.section.6.1">
+<a href="#rfc.section.6.1">6.1.</a> <a href="#using-cose-objects-to-protect-the-resource-representation" id="using-cose-objects-to-protect-the-resource-representation">Using COSE Objects to protect the resource representation</a>
 </h1>
-<p id="rfc.section.5.1.p.1">The Publisher uses the symmetric COSE Key received from AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to protect the payload of the PUBLISH operation (Section 4.3 of <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>). Specifically, the COSE Key is used to create a COSE_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to countersign the COSE Object as specified in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.</p>
-<p id="rfc.section.5.1.p.2">The Subscriber uses the kid in the countersignature field in the COSE object to retrieve the right public key to verify the countersignature. It then uses the symmetric key received from AS2 to verify and decrypt the publication received in the payload of the CoAP Notification from the Broker.</p>
-<p id="rfc.section.5.1.p.3">The COSE object is constructed in the following way:</p>
+<p id="rfc.section.6.1.p.1">The Publisher uses the symmetric COSE Key received from AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to protect the payload of the PUBLISH operation (Section 4.3 of <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>). Specifically, the COSE Key is used to create a COSE_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to countersign the COSE Object as specified in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.</p>
+<p id="rfc.section.6.1.p.2">The Subscriber uses the kid in the countersignature field in the COSE object to retrieve the right public key to verify the countersignature. It then uses the symmetric key received from AS2 to verify and decrypt the publication received in the payload of the CoAP Notification from the Broker.</p>
+<p id="rfc.section.6.1.p.3">The COSE object is constructed in the following way:</p>
 <p></p>
 
 <ul>
@@ -691,8 +720,8 @@ address {
 </li>
 <li>The ciphertext, computed over the plaintext that MUST contain the CoAP payload.</li>
 </ul>
-<p id="rfc.section.5.1.p.5">The external_aad, when using AEAD, is an empty string.</p>
-<p id="rfc.section.5.1.p.6">An example is given in <a href="#fig-cose-ex" class="xref">Figure 12</a></p>
+<p id="rfc.section.6.1.p.5">The external_aad, when using AEAD, is an empty string.</p>
+<p id="rfc.section.6.1.p.6">An example is given in <a href="#fig-cose-ex" class="xref">Figure 12</a></p>
 <div id="rfc.figure.12"></div>
 <div id="fig-cose-ex"></div>
 <pre>
@@ -719,23 +748,24 @@ address {
 )
 </pre>
 <p class="figure">Figure 12: Example of COSE Object sent in the payload of a PUBLISH operation</p>
-<p id="rfc.section.5.1.p.7">The encryption and decryption operations are described in sections 5.3 and 5.4 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
-<h1 id="rfc.section.6">
-<a href="#rfc.section.6">6.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
-</h1>
-<p id="rfc.section.6.p.1">In the profile described above, the Publisher and Subscriber use asymmetric crypto, which would make the message exchange quite heavy for small constrained devices. Moreover, all Subscribers must be able to access the public keys of all the Publishers to a specific topic to be able to verify the publications. Such a database could be set up and managed by the same entity having control of the topic, i.e. AS2.</p>
-<p id="rfc.section.6.p.2">An application where it is not critical that only authorized Publishers can publish on a topic may decide not to make use of the asymmetric crypto and only use symmetric encryption/MAC to confidentiality and integrity protect the publication, but this is not recommended since, as a result, any authorized Subscribers with access to the Broker may forge unauthorized publications without being detected. In this symmetric case the Subscribers would only need one symmetric key per topic, and would not need to know any information about the Publishers, that can be anonymous to it and the Broker.</p>
-<p id="rfc.section.6.p.3">Subscribers can be excluded from future publications through re-keying for a certain topic. This could be set up to happen on a regular basis, for certain applications. How this could be done is out of scope for this work.</p>
-<p id="rfc.section.6.p.4">The Broker is only trusted with verifying that the Publisher is authorized to publish, but is not trusted with the publications itself, which it cannot read nor modify. In this setting, caching of publications on the Broker is still allowed.</p>
-<p id="rfc.section.6.p.5">TODO: expand on security and Privacy considerations</p>
+<p id="rfc.section.6.1.p.7">The encryption and decryption operations are described in sections 5.3 and 5.4 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
 <h1 id="rfc.section.7">
-<a href="#rfc.section.7">7.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+<a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
-<p id="rfc.section.7.p.1">TODO: &#8220;key&#8221; parameter, &#8220;publisher&#8221; and &#8220;subscriber&#8221; profile identifiers</p>
+<p id="rfc.section.7.p.1">In the profile described above, the Publisher and Subscriber use asymmetric crypto, which would make the message exchange quite heavy for small constrained devices. Moreover, all Subscribers must be able to access the public keys of all the Publishers to a specific topic to be able to verify the publications. Such a database could be set up and managed by the same entity having control of the topic, i.e. AS2.</p>
+<p id="rfc.section.7.p.2">An application where it is not critical that only authorized Publishers can publish on a topic may decide not to make use of the asymmetric crypto and only use symmetric encryption/MAC to confidentiality and integrity protect the publication, but this is not recommended since, as a result, any authorized Subscribers with access to the Broker may forge unauthorized publications without being detected. In this symmetric case the Subscribers would only need one symmetric key per topic, and would not need to know any information about the Publishers, that can be anonymous to it and the Broker.</p>
+<p id="rfc.section.7.p.3">Subscribers can be excluded from future publications through re-keying for a certain topic. This could be set up to happen on a regular basis, for certain applications. How this could be done is out of scope for this work.</p>
+<p id="rfc.section.7.p.4">The Broker is only trusted with verifying that the Publisher is authorized to publish, but is not trusted with the publications itself, which it cannot read nor modify. In this setting, caching of publications on the Broker is still allowed.</p>
+<p id="rfc.section.7.p.5">TODO: expand on security and Privacy considerations</p>
 <h1 id="rfc.section.8">
-<a href="#rfc.section.8">8.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
+<a href="#rfc.section.8">8.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
 </h1>
-<p id="rfc.section.8.p.1">The author wishes to thank John Mattsson, Ludwig Seitz and G&#246;ran Selander for the useful discussion that helped shape this document.</p>
+<p id="rfc.section.8.p.1">The following registrations are done for the ACE OAuth Profile Registry following the procedure specified in <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>.</p>
+<p id="rfc.section.8.p.2">Note to RFC Editor: Please replace all occurrences of &#8220;[[This document]]&#8221; with the RFC number of this specification and delete this paragraph.</p>
+<p id="rfc.section.8.p.3">Name: coap_pubsub</p>
+<p id="rfc.section.8.p.4">Description: Profile for delegating client authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment.</p>
+<p id="rfc.section.8.p.5">CBOR Key: TBD</p>
+<p id="rfc.section.8.p.6">Reference: [[This document]]</p>
 <h1 id="rfc.references">
 <a href="#rfc.references">9.</a> References</h1>
 <h1 id="rfc.references.1">
@@ -744,17 +774,17 @@ address {
 <tr>
 <td class="reference"><b id="I-D.ietf-ace-actors">[I-D.ietf-ace-actors]</b></td>
 <td class="top">
-<a>Gerdes, S.</a>, <a>Seitz, L.</a>, <a>Selander, G.</a> and <a>C. Bormann</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-actors-05">An architecture for authorization in constrained environments</a>", Internet-Draft draft-ietf-ace-actors-05, March 2017.</td>
+<a>Gerdes, S.</a>, <a>Seitz, L.</a>, <a>Selander, G.</a> and <a>C. Bormann</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-actors-06">An architecture for authorization in constrained environments</a>", Internet-Draft draft-ietf-ace-actors-06, November 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b></td>
 <td class="top">
-<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-07">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-07, August 2017.</td>
+<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-10">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-10, February 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-core-coap-pubsub">[I-D.ietf-core-coap-pubsub]</b></td>
 <td class="top">
-<a>Koster, M.</a>, <a>Keranen, A.</a> and <a>J. Jimenez</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-coap-pubsub-02">Publish-Subscribe Broker for the Constrained Application Protocol (CoAP)</a>", Internet-Draft draft-ietf-core-coap-pubsub-02, July 2017.</td>
+<a>Koster, M.</a>, <a>Keranen, A.</a> and <a>J. Jimenez</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-coap-pubsub-03">Publish-Subscribe Broker for the Constrained Application Protocol (CoAP)</a>", Internet-Draft draft-ietf-core-coap-pubsub-03, February 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
@@ -776,26 +806,23 @@ address {
 <a href="#rfc.references.2">9.2.</a> Informative References</h1>
 <table><tbody>
 <tr>
-<td class="reference"><b id="I-D.gerdes-ace-dtls-authorize">[I-D.gerdes-ace-dtls-authorize]</b></td>
+<td class="reference"><b id="I-D.ietf-ace-dtls-authorize">[I-D.ietf-ace-dtls-authorize]</b></td>
 <td class="top">
-<a>Gerdes, S.</a>, <a>Bergmann, O.</a>, <a>Bormann, C.</a>, <a>Selander, G.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-gerdes-ace-dtls-authorize-01">Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-gerdes-ace-dtls-authorize-01, March 2017.</td>
+<a>Gerdes, S.</a>, <a>Bergmann, O.</a>, <a>Bormann, C.</a>, <a>Selander, G.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-dtls-authorize-02">Datagram Transport Layer Security (DTLS) Profiles for Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-dtls-authorize-02, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-ace-oscore-profile">[I-D.ietf-ace-oscore-profile]</b></td>
+<td class="top">
+<a>Seitz, L.</a>, <a>Palombini, F.</a> and <a>M. Gunnarsson</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oscore-profile-00">OSCORE profile of the Authentication and Authorization for Constrained Environments Framework</a>", Internet-Draft draft-ietf-ace-oscore-profile-00, December 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-core-resource-directory">[I-D.ietf-core-resource-directory]</b></td>
 <td class="top">
-<a>Shelby, Z.</a>, <a>Koster, M.</a>, <a>Bormann, C.</a>, <a>Stok, P.</a> and <a>C. Amsuess</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-resource-directory-11">CoRE Resource Directory</a>", Internet-Draft draft-ietf-core-resource-directory-11, July 2017.</td>
-</tr>
-<tr>
-<td class="reference"><b id="I-D.seitz-ace-oauth-authz">[I-D.seitz-ace-oauth-authz]</b></td>
-<td class="top">
-<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-seitz-ace-oauth-authz-00">Authorization for the Internet of Things using OAuth 2.0</a>", Internet-Draft draft-seitz-ace-oauth-authz-00, October 2015.</td>
-</tr>
-<tr>
-<td class="reference"><b id="I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</b></td>
-<td class="top">
-<a>Seitz, L.</a>, <a>Palombini, F.</a> and <a>M. Gunnarsson</a>, "<a href="https://tools.ietf.org/html/draft-seitz-ace-oscoap-profile-04">OSCOAP profile of the Authentication and Authorization for Constrained Environments Framework</a>", Internet-Draft draft-seitz-ace-oscoap-profile-04, July 2017.</td>
+<a>Shelby, Z.</a>, <a>Koster, M.</a>, <a>Bormann, C.</a>, <a>Stok, P.</a> and <a>C. Amsuess</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-resource-directory-12">CoRE Resource Directory</a>", Internet-Draft draft-ietf-core-resource-directory-12, October 2017.</td>
 </tr>
 </tbody></table>
+<h1 id="rfc.acknowledgments"><a href="#rfc.acknowledgments">Acknowledgments</a></h1>
+<p id="rfc.section.A.p.1">The author wishes to thank Ari Ker&#228;nen, John Mattsson, Ludwig Seitz, G&#246;ran Selander, Jim Schaad and Marco Tiloca for the useful discussion and reviews that helped shape this document.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
@@ -820,6 +847,5 @@ address {
   </address>
 </div>
 
-  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/EricssonResearch/coap-pubsub-profile">Fork me on GitHub</a></div></div>
 </body>
 </html>
