@@ -4,8 +4,8 @@
 
 ACE Working Group                                           F. Palombini
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                          March 01, 2018
-Expires: September 2, 2018
+Intended status: Standards Track                          March 02, 2018
+Expires: September 3, 2018
 
 
      CoAP Pub-Sub Profile for Authentication and Authorization for
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 2, 2018.
+   This Internet-Draft will expire on September 3, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Palombini               Expires September 2, 2018               [Page 1]
+Palombini               Expires September 3, 2018               [Page 1]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -98,18 +98,18 @@ Table of Contents
    document are to be interpreted as described in RFC 2119 [RFC2119].
 
    Readers are expected to be familiar with the terms and concepts
-   described in [I-D.ietf-ace-oauth-authz], TODO: I-D.palombini-ace-key-
-   groupcomm and [I-D.ietf-core-coap-pubsub].  In particular,
-   analogously to [I-D.ietf-ace-oauth-authz], terminology for entities
-   in the architecture such as Client (C), Resource Server (RS), and
-   Authorization Server (AS) is defined in OAuth 2.0 [RFC6749] and
-   [I-D.ietf-ace-actors], and terminology for entities such as the Key
-   Distribution Center (KDC) and Dispatcher in TODO: I-D.palombini-ace-
-   key-groupcomm.
+   described in [I-D.ietf-ace-oauth-authz],
+   [I-D.palombini-ace-key-groupcomm] and [I-D.ietf-core-coap-pubsub].
+   In particular, analogously to [I-D.ietf-ace-oauth-authz], terminology
+   for entities in the architecture such as Client (C), Resource Server
+   (RS), and Authorization Server (AS) is defined in OAuth 2.0 [RFC6749]
+   and [I-D.ietf-ace-actors], and terminology for entities such as the
+   Key Distribution Center (KDC) and Dispatcher in
+   [I-D.palombini-ace-key-groupcomm].
 
 
 
-Palombini               Expires September 2, 2018               [Page 2]
+Palombini               Expires September 3, 2018               [Page 2]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -118,8 +118,8 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
    The objective of this document is to specify how to protect a CoAP
    pub-sub communication, as described in [I-D.ietf-core-coap-pubsub],
-   using TODO: I-D.palombini-ace-key-groupcomm, which itself expands the
-   Ace framework ([I-D.ietf-ace-oauth-authz]), and profiles
+   using [I-D.palombini-ace-key-groupcomm], which itself expands the Ace
+   framework ([I-D.ietf-ace-oauth-authz]), and profiles
    ([I-D.ietf-ace-dtls-authorize], [I-D.ietf-ace-oscore-profile]).
 
    The architecture of the scenario is shown in Figure 1.
@@ -145,13 +145,13 @@ Internet-Draft             coap-pubsub-profile                March 2018
        Figure 1: Architecture CoAP pubsub with Authorization Servers
 
    The RS is the broker, which contains the topic.  This node
-   corresponds to the Dispatcher, in TODO: I-D.palombini-ace-key-
-   groupcomm.  The AS1 hosts the policies about the Broker: what
-   endpoints are allowed to Publish on the Broker.  The Clients access
-   this node to get write access to the Broker.  The AS2 hosts the
-   policies about the topic: what endpoints are allowed to access what
-   topic.  This node represents both the AS and Key Distribution Center
-   roles from TODO: I-D.palombini-ace-key-groupcomm.
+   corresponds to the Dispatcher, in [I-D.palombini-ace-key-groupcomm].
+   The AS1 hosts the policies about the Broker: what endpoints are
+   allowed to Publish on the Broker.  The Clients access this node to
+   get write access to the Broker.  The AS2 hosts the policies about the
+   topic: what endpoints are allowed to access what topic.  This node
+   represents both the AS and Key Distribution Center roles from
+   [I-D.palombini-ace-key-groupcomm].
 
    There are four phases, the first three can be done in parallel.
 
@@ -165,7 +165,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018               [Page 3]
+Palombini               Expires September 3, 2018               [Page 3]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -181,7 +181,15 @@ Internet-Draft             coap-pubsub-profile                March 2018
    Subscriber, to protect the publication content itself (Security
    Association 2).  The Security Association 1 is set up using AS1 and a
    profile of [I-D.ietf-ace-oauth-authz], the Security Association 2 is
-   set up using AS2 and TODO: I-D.palombini-ace-key-groupcomm.
+   set up using AS2 and [I-D.palombini-ace-key-groupcomm].
+
+   Note that, analogously to the Publisher, the Subscriber can also set
+   up an additional security association with the Broker, using an AS,
+   in the same way the Publisher does with AS1.  In this case, only
+   authorized Subscribers would be able to get notifications from the
+   Broker.  The overhead would be that each Subscriber should access the
+   AS and get all the information to start a secure exchange with the
+   Broker.
 
    +------------+             +------------+              +------------+
    |   CoAP     |             |   CoAP     |              |    CoAP    |
@@ -203,28 +211,27 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 3.  coap_pubsub Profile
 
-   This profile uses TODO: I-D.palombini-ace-key-groupcomm, which
-   expands the ACE framework.  This document specifies which exact
-   parameters from TODO: I-D.palombini-ace-key-groupcomm have to be
-   used, and the values for each parameter.
-
-   The Publisher and the Subscriber map to the Client in TODO: I-
-   D.palombini-ace-key-groupcomm, the AS2 maps to the AS and to the KDC,
-   the Broker maps to the Dispatcher.
-
-   Note that both publishers and subscribers use the same profile,
-   called "coap_pubsub".
+   This profile uses [I-D.palombini-ace-key-groupcomm], which expands
+   the ACE framework.  This document specifies which exact parameters
+   from [I-D.palombini-ace-key-groupcomm] have to be used, and the
+   values for each parameter.
 
 
 
 
 
 
-
-Palombini               Expires September 2, 2018               [Page 4]
+Palombini               Expires September 3, 2018               [Page 4]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
+
+   The Publisher and the Subscriber map to the Client in
+   [I-D.palombini-ace-key-groupcomm], the AS2 maps to the AS and to the
+   KDC, the Broker maps to the Dispatcher.
+
+   Note that both publishers and subscribers use the same profile,
+   called "coap_pubsub".
 
 3.1.  Retrieval of COSE Key for protection of content
 
@@ -266,28 +273,26 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
    After retrieving the AS2 address, the Client sends an Authorization +
    Key Distribution Request, which is an Authorization Request merged
-   with a Key Distribution Request, as described in TODO: I-D.palombini-
-   ace-key-groupcomm, Sections 3.1 and 4.1.  The reason for merging
-   these two messages is that the AS2 is both the AS and the KDC, in
-   this setting, so the Authorization Response and the Post Token
-   message are not necessary.
+   with a Key Distribution Request, as described in
 
 
 
-
-
-
-Palombini               Expires September 2, 2018               [Page 5]
+Palombini               Expires September 3, 2018               [Page 5]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
+
+   [I-D.palombini-ace-key-groupcomm], Sections 3.1 and 4.1.  The reason
+   for merging these two messages is that the AS2 is both the AS and the
+   KDC, in this setting, so the Authorization Response and the Post
+   Token message are not necessary.
 
    More specifically, the Client sends a POST request to the /token
    endpoint on AS2, that MUST contain in the payload (formatted as a
    CBOR map):
 
    o  the following fields from the Authorization Request (Section 3.1
-      of TODO: I-D.palombini-ace-key-groupcomm):
+      of [I-D.palombini-ace-key-groupcomm]):
 
       *  the grant type set to "client_credentials",
 
@@ -295,7 +300,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
          "Client_id"
 
    o  the following fields from the Key Distribution Request
-      (Section 4.1 of TODO: I-D.palombini-ace-key-groupcomm):
+      (Section 4.1 of [I-D.palombini-ace-key-groupcomm]):
 
       *  the client_cred parameter containing the Client's public key,
          if the Client needs to directly send that to the AS2,
@@ -320,29 +325,28 @@ Internet-Draft             coap-pubsub-profile                March 2018
    of the Client.
 
    The AS2 response is an Authorization + Key Distribution Response, see
-   Section 4.2 of TODO: I-D.palombini-ace-key-groupcomm.  The payload
+   Section 4.2 of [I-D.palombini-ace-key-groupcomm].  The payload
    (formatted as a CBOR map) MUST contain:
 
    o  the following fields from the Authorization Response (Section 3.2
-      of TODO: I-D.palombini-ace-key-groupcomm):
+      of [I-D.palombini-ace-key-groupcomm]):
+
+
+
+Palombini               Expires September 3, 2018               [Page 6]
+
+Internet-Draft             coap-pubsub-profile                March 2018
+
 
       *  profile set to "coap_pubsub"
 
       *  scope parameter (optionally), set to a CBOR array containing
          the broker's topic as first element and the string "publisher"
-
-
-
-Palombini               Expires September 2, 2018               [Page 6]
-
-Internet-Draft             coap-pubsub-profile                March 2018
-
-
          for publishers and "subscriber" for subscribers as second
          element
 
    o  the following fields from the Key Distribution Response
-      (Section 4.2 of TODO: I-D.palombini-ace-key-groupcomm):
+      (Section 4.2 of [I-D.palombini-ace-key-groupcomm]):
 
       *  "key" parameter including:
 
@@ -385,11 +389,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-
-
-
-
-Palombini               Expires September 2, 2018               [Page 7]
+Palombini               Expires September 3, 2018               [Page 7]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -445,13 +445,13 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018               [Page 8]
+Palombini               Expires September 3, 2018               [Page 8]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
 
    (B) corresponds to the retrieval of the keying material to protect
-   the publication, and uses TODO: I-D.palombini-ace-key-groupcomm.  The
+   the publication, and uses [I-D.palombini-ace-key-groupcomm].  The
    details are defined in Section 3.1.
 
    An example of the payload of an Authorization + Key Distribution
@@ -501,7 +501,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018               [Page 9]
+Palombini               Expires September 3, 2018               [Page 9]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -557,7 +557,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018              [Page 10]
+Palombini               Expires September 3, 2018              [Page 10]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -613,7 +613,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018              [Page 11]
+Palombini               Expires September 3, 2018              [Page 11]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -669,7 +669,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018              [Page 12]
+Palombini               Expires September 3, 2018              [Page 12]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -725,7 +725,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018              [Page 13]
+Palombini               Expires September 3, 2018              [Page 13]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -781,7 +781,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 2, 2018              [Page 14]
+Palombini               Expires September 3, 2018              [Page 14]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -789,12 +789,6 @@ Internet-Draft             coap-pubsub-profile                March 2018
 9.  References
 
 9.1.  Normative References
-
-   [I-D.ietf-ace-actors]
-              Gerdes, S., Seitz, L., Selander, G., and C. Bormann, "An
-              architecture for authorization in constrained
-              environments", draft-ietf-ace-actors-06 (work in
-              progress), November 2017.
 
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
@@ -807,6 +801,11 @@ Internet-Draft             coap-pubsub-profile                March 2018
               Subscribe Broker for the Constrained Application Protocol
               (CoAP)", draft-ietf-core-coap-pubsub-03 (work in
               progress), February 2018.
+
+   [I-D.palombini-ace-key-groupcomm]
+              Palombini, F. and M. Tiloca, "Key Provisioning for Group
+              Communication using ACE", draft-palombini-ace-key-
+              groupcomm-00 (work in progress), March 2018.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -823,6 +822,12 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 9.2.  Informative References
 
+   [I-D.ietf-ace-actors]
+              Gerdes, S., Seitz, L., Selander, G., and C. Bormann, "An
+              architecture for authorization in constrained
+              environments", draft-ietf-ace-actors-06 (work in
+              progress), November 2017.
+
    [I-D.ietf-ace-dtls-authorize]
               Gerdes, S., Bergmann, O., Bormann, C., Selander, G., and
               L. Seitz, "Datagram Transport Layer Security (DTLS)
@@ -832,12 +837,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-
-
-
-
-
-Palombini               Expires September 2, 2018              [Page 15]
+Palombini               Expires September 3, 2018              [Page 15]
 
 Internet-Draft             coap-pubsub-profile                March 2018
 
@@ -851,7 +851,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
    [I-D.ietf-core-resource-directory]
               Shelby, Z., Koster, M., Bormann, C., Stok, P., and C.
               Amsuess, "CoRE Resource Directory", draft-ietf-core-
-              resource-directory-12 (work in progress), October 2017.
+              resource-directory-13 (work in progress), March 2018.
 
 Acknowledgments
 
@@ -893,4 +893,4 @@ Author's Address
 
 
 
-Palombini               Expires September 2, 2018              [Page 16]
+Palombini               Expires September 3, 2018              [Page 16]
