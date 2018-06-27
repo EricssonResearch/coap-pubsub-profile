@@ -4,8 +4,8 @@
 
 ACE Working Group                                           F. Palombini
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                          March 02, 2018
-Expires: September 3, 2018
+Intended status: Standards Track                           June 27, 2018
+Expires: December 29, 2018
 
 
      CoAP Pub-Sub Profile for Authentication and Authorization for
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 3, 2018.
+   This Internet-Draft will expire on December 29, 2018.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Palombini               Expires September 3, 2018               [Page 1]
+Palombini               Expires December 29, 2018               [Page 1]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Palombini               Expires September 3, 2018               [Page 2]
+Palombini               Expires December 29, 2018               [Page 2]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
 2.  Profile Overview
@@ -165,9 +165,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018               [Page 3]
+Palombini               Expires December 29, 2018               [Page 3]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    4.  The Publisher and the Subscriber securely post to and get
@@ -221,9 +221,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018               [Page 4]
+Palombini               Expires December 29, 2018               [Page 4]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    The Publisher and the Subscriber map to the Client in
@@ -266,26 +266,21 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
                   Figure 3: AS1, AS2 Information example
 
-   Analogously to what is defined in [I-D.ietf-ace-oauth-authz], instead
-   of the initial Unauthorized Resource Request message, the Client MAY
-   look up the desired topic in a resource directory (see
-   [I-D.ietf-core-resource-directory]).
-
    After retrieving the AS2 address, the Client sends an Authorization +
    Key Distribution Request, which is an Authorization Request merged
    with a Key Distribution Request, as described in
-
-
-
-Palombini               Expires September 3, 2018               [Page 5]
-
-Internet-Draft             coap-pubsub-profile                March 2018
-
-
    [I-D.palombini-ace-key-groupcomm], Sections 3.1 and 4.1.  The reason
    for merging these two messages is that the AS2 is both the AS and the
    KDC, in this setting, so the Authorization Response and the Post
    Token message are not necessary.
+
+
+
+
+Palombini               Expires December 29, 2018               [Page 5]
+
+Internet-Draft             coap-pubsub-profile                 June 2018
+
 
    More specifically, the Client sends a POST request to the /token
    endpoint on AS2, that MUST contain in the payload (formatted as a
@@ -309,8 +304,8 @@ Internet-Draft             coap-pubsub-profile                March 2018
          topic as first element and the string "publisher" for
          publishers and "subscriber" for subscribers as second element
 
-      *  the get_pub_keys parameter set to 0x01 if the Client needs to
-         retrieve the public keys of the other pubsub members
+      *  the get_pub_keys parameter set to the empty array if the Client
+         needs to retrieve the public keys of the other pubsub members
 
       *  OPTIONALLY, if needed, the pub_keys_repos parameters
 
@@ -331,17 +326,18 @@ Internet-Draft             coap-pubsub-profile                March 2018
    o  the following fields from the Authorization Response (Section 3.2
       of [I-D.palombini-ace-key-groupcomm]):
 
-
-
-Palombini               Expires September 3, 2018               [Page 6]
-
-Internet-Draft             coap-pubsub-profile                March 2018
-
-
       *  profile set to "coap_pubsub"
 
       *  scope parameter (optionally), set to a CBOR array containing
          the broker's topic as first element and the string "publisher"
+
+
+
+Palombini               Expires December 29, 2018               [Page 6]
+
+Internet-Draft             coap-pubsub-profile                 June 2018
+
+
          for publishers and "subscriber" for subscribers as second
          element
 
@@ -359,11 +355,14 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
          +  k with value the symmetric key value
 
+         +  OPTIONALLY, exp with the expiration time of the key
+
          +  OPTIONALLY, kid with an identifier for the key value
 
       *  "pub_keys", containing the public keys of all authorized
          signing members, if the "get_pub_keys" parameter was present
-         and set to 0x01 in the Authorization + Key Distribution Request
+         and set to the empty array in the Authorization + Key
+         Distribution Request
 
    Examples for the response payload are detailed in Figure 6 and
    Figure 9.
@@ -389,9 +388,10 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018               [Page 7]
+
+Palombini               Expires December 29, 2018               [Page 7]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
                         +----------------+   +----------------+
@@ -445,9 +445,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018               [Page 8]
+Palombini               Expires December 29, 2018               [Page 8]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    (B) corresponds to the retrieval of the keying material to protect
@@ -455,7 +455,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
    details are defined in Section 3.1.
 
    An example of the payload of an Authorization + Key Distribution
-   Request and corresponding Response for a Subscriber is specified in
+   Request and corresponding Response for a Publisher is specified in
    Figure 5 and Figure 6.
 
    {
@@ -501,9 +501,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018               [Page 9]
+Palombini               Expires December 29, 2018               [Page 9]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
                                      +----------------+
@@ -539,7 +539,7 @@ Internet-Draft             coap-pubsub-profile                March 2018
       MUST be set to "subscriber".  The Subscriber MUST have access to
       the public keys of all the Publishers; this MAY be achieved in the
       Authorization + Key Distribution Request by using the parameter
-      get_pub_keys set to 0x01.
+      get_pub_keys set to empty array.
 
    o  The Authorization + Key Distribution Response MUST contain the
       pub_keys parameter.
@@ -557,15 +557,15 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018              [Page 10]
+Palombini               Expires December 29, 2018              [Page 10]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
                 {
                   "grant_type" : "client_credentials",
                   "scope" : ["Broker1/Temp", "subscriber"],
-                  "get_pub_keys" : 0x01
+                  "get_pub_keys" : [ ]
                 }
 
      Figure 8: Authorization + Key Distribution Request payload for a
@@ -613,9 +613,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018              [Page 11]
+Palombini               Expires December 29, 2018              [Page 11]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    The (E) message corresponds to the publication of a topic on the
@@ -669,9 +669,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018              [Page 12]
+Palombini               Expires December 29, 2018              [Page 12]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
       *  the kid (same value as the kid of the asymmetric COSE Key
@@ -725,9 +725,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018              [Page 13]
+Palombini               Expires December 29, 2018              [Page 13]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
    be set up and managed by the same entity having control of the topic,
@@ -781,9 +781,9 @@ Internet-Draft             coap-pubsub-profile                March 2018
 
 
 
-Palombini               Expires September 3, 2018              [Page 14]
+Palombini               Expires December 29, 2018              [Page 14]
 
-Internet-Draft             coap-pubsub-profile                March 2018
+Internet-Draft             coap-pubsub-profile                 June 2018
 
 
 9.  References
@@ -793,14 +793,15 @@ Internet-Draft             coap-pubsub-profile                March 2018
    [I-D.ietf-ace-oauth-authz]
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
-              Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-10 (work in progress), February 2018.
+              Constrained Environments (ACE) using the OAuth 2.0
+              Framework (ACE-OAuth)", draft-ietf-ace-oauth-authz-12
+              (work in progress), May 2018.
 
    [I-D.ietf-core-coap-pubsub]
               Koster, M., Keranen, A., and J. Jimenez, "Publish-
               Subscribe Broker for the Constrained Application Protocol
-              (CoAP)", draft-ietf-core-coap-pubsub-03 (work in
-              progress), February 2018.
+              (CoAP)", draft-ietf-core-coap-pubsub-04 (work in
+              progress), March 2018.
 
    [I-D.palombini-ace-key-groupcomm]
               Palombini, F. and M. Tiloca, "Key Provisioning for Group
@@ -828,30 +829,31 @@ Internet-Draft             coap-pubsub-profile                March 2018
               environments", draft-ietf-ace-actors-06 (work in
               progress), November 2017.
 
+
+
+
+
+
+
+
+
+Palombini               Expires December 29, 2018              [Page 15]
+
+Internet-Draft             coap-pubsub-profile                 June 2018
+
+
    [I-D.ietf-ace-dtls-authorize]
               Gerdes, S., Bergmann, O., Bormann, C., Selander, G., and
               L. Seitz, "Datagram Transport Layer Security (DTLS)
-              Profiles for Authentication and Authorization for
+              Profile for Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-dtls-
-              authorize-02 (work in progress), October 2017.
-
-
-
-Palombini               Expires September 3, 2018              [Page 15]
-
-Internet-Draft             coap-pubsub-profile                March 2018
-
+              authorize-03 (work in progress), March 2018.
 
    [I-D.ietf-ace-oscore-profile]
-              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCORE
-              profile of the Authentication and Authorization for
-              Constrained Environments Framework", draft-ietf-ace-
-              oscore-profile-00 (work in progress), December 2017.
-
-   [I-D.ietf-core-resource-directory]
-              Shelby, Z., Koster, M., Bormann, C., Stok, P., and C.
-              Amsuess, "CoRE Resource Directory", draft-ietf-core-
-              resource-directory-13 (work in progress), March 2018.
+              Seitz, L., Palombini, F., Gunnarsson, M., and G. Selander,
+              "OSCORE profile of the Authentication and Authorization
+              for Constrained Environments Framework", draft-ietf-ace-
+              oscore-profile-01 (work in progress), March 2018.
 
 Acknowledgments
 
@@ -891,6 +893,4 @@ Author's Address
 
 
 
-
-
-Palombini               Expires September 3, 2018              [Page 16]
+Palombini               Expires December 29, 2018              [Page 16]
