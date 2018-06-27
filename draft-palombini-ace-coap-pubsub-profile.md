@@ -37,7 +37,6 @@ informative:
   I-D.ietf-ace-actors:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-ace-oscore-profile:
-  I-D.ietf-core-resource-directory:
 
 entity:
         SELF: "[RFC-XXXX]"
@@ -98,7 +97,7 @@ There are four phases, the first three can be done in parallel.
 <!-- Jim
  One of the things that I am not currently happy with is that you are looking at AS1 and AS2 as being independent appliers of access control logic without any communication between them.  I think that AS1 needs the ability to give policy to AS2 on a topic after it has been created and before any subscribers get keys.  In the case they are co-resident this is trivial, in other cases it may not be. 
 
- AS1 and AS2 have in my mind clearly separated functions. There is some coordination involved of course (to gain knowledge of the policies), but I think that how this is dealt with is application specific. For example, there could be some node distributing those (they do not need to talk to each other directly). Added some generic considerations at the end of the section.
+ FP: AS1 and AS2 have in my mind clearly separated functions. There is some coordination involved of course (to gain knowledge of the policies), but I think that how this is dealt with is application specific. For example, there could be some node distributing those (they do not need to talk to each other directly). Added some generic considerations at the end of the section.
 -->
 
 1. The Publisher requests publishing access to the Broker at the AS1, and communicates with the Broker to set up security.
@@ -116,7 +115,7 @@ Note that, analogously to the Publisher, the Subscriber can also set up an addit
 AS2 I correct.  If you have a second publisher, does it need to talk to both
 AS1 and AS2 or just to AS2?  Is this really an AS1 controls creation of topics and AS2 controls publishing and subscribing to topics?  If the publisher loses its membership in the group for any reason, should it be able to publish willy-nilly anyway?  I.e. should AS2 be able to "revoke" the publishers right to publish?
 
-A second publisher would need to talk to both AS1 and AS2. As I intended, AS1 controls who can publish to (or create) a topic on a broker, AS2 more generally controls who can decrypt the content of the publication.
+FP: A second publisher would need to talk to both AS1 and AS2. As I intended, AS1 controls who can publish to (or create) a topic on a broker, AS2 more generally controls who can decrypt the content of the publication.
 "Losing the membership" can mean "not being able to access (read or write) the content of the publication", in which case AS2 should revoke the node's rights or it can mean "not allowed to publish on the broker" (maybe it is still allowed to subscribe to the topic), in which case AS1 should revoke the node's right. Both revocations are not specified for now.
 -->
 
@@ -137,13 +136,13 @@ A second publisher would need to talk to both AS1 and AS2. As I intended, AS1 co
 <!-- Jim
   I don't think the picture is correct at the bottom of the section.  You have a Publisher-Subscriber client/client association 
 
-  Both publisher and subscriber are CoAP client, as specified in the pub-sub doc
+  FP: Both publisher and subscriber are CoAP client, as specified in the pub-sub doc. The association is done via the sec context that is shared between pubs and subs.
 -->
 <!-- Jim
 Is there any expectation that the broker should be notified
 on a "revocation" of a publisher's right to publish?  (As opposed to the right just expiring.)  There is no need to enforce subscribers right to subscribe since a key roll over means that they are getting gibberish.
 
-Yes, the broker should be notified of revocation. This is not specified here, and I think this is a general topic that the framework should address: no profile deals with revocations so far, as far as I can tell. 
+FP: Yes, the broker should be notified of revocation. This is not specified here, and I think this is a general topic that the framework should address: no profile deals with revocations so far, as far as I can tell. Some additional content on revocation is in the ace-key-groupcomm doc.
 -->
 
 Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this profile.
@@ -191,14 +190,6 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
  The broker _may_ send this info to both pub and sub, and then the subscriber could just discard the AS it does not need (AS1). Or the sub could know what AS to contact from a different exchange.
 -->
 
-Analogously to what is defined in {{I-D.ietf-ace-oauth-authz}}, instead of the initial Unauthorized Resource Request message, the Client MAY look up the desired topic in a resource directory (see {{I-D.ietf-core-resource-directory}}).
-
-<!-- Jim
-  I am unsure what you believe is going to be accomplished by doing a RD lookup.  You can get the name of the resource, but it would not necessarily return the AS1, AS2 strings.
-
-  Ok, I guess the same comment applies to https://tools.ietf.org/html/draft-ietf-ace-dtls-authorize-01#section-2 (4th paragraph) ? Otherwise I might have misunderstood that.
--->
-
 After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in {{I-D.palombini-ace-key-groupcomm}}, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
 
 More specifically, the Client sends a POST request to the /token endpoint on AS2, that MUST contain in the payload (formatted as a CBOR map):
@@ -209,7 +200,7 @@ More specifically, the Client sends a POST request to the /token endpoint on AS2
 - the following fields from the Key Distribution Request (Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}):
   * the client\_cred parameter containing the Client's public key, if the Client needs to directly send that to the AS2,
   * the scope parameter set to a CBOR array containing the broker's topic as first element and the string "publisher" for publishers and "subscriber" for subscribers as second element
-  * the get_pub_keys parameter set to 0x01 if the Client needs to retrieve the public keys of the other pubsub members
+  * the get_pub_keys parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
   * OPTIONALLY, if needed, the pub_keys_repos parameters
 
 Note that the alg parameter in the client_cred COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}.
@@ -240,8 +231,9 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
     * alg with value defined by the AS2 (Content Encryption Algorithm)
     * Base IV with value defined by the AS2
     * k with value the symmetric key value
+    * OPTIONALLY, exp with the expiration time of the key
     * OPTIONALLY, kid with an identifier for the key value
-  - "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to 0x01 in the Authorization + Key Distribution Request
+  - "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to the empty array in the Authorization + Key Distribution Request
 
 Examples for the response payload are detailed in {{fig-resp-as2}} and {{fig-resp2-as2}}.
 
@@ -287,7 +279,7 @@ As specified, the Publisher has the role of a CoAP client, the Broker has the ro
 
 (B) corresponds to the retrieval of the keying material to protect the publication, and uses {{I-D.palombini-ace-key-groupcomm}}. The details are defined in {{retr-cosekey}}.
 
-An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in {{fig-post-as2}} and {{fig-resp-as2}}.
+An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}.
 
 ~~~~~~~~~~~~
 {
@@ -353,7 +345,7 @@ Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 This step is the same as (B) between Publisher and AS2 ({{retr-cosekey}}), with the following differences:
 
-* The Authorization + Key Distribution Request MUST NOT contain the client\_cred parameter, the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter get_pub_keys set to 0x01.
+* The Authorization + Key Distribution Request MUST NOT contain the client\_cred parameter, the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter get_pub_keys set to empty array.
 
 * The Authorization + Key Distribution Response MUST contain the pub_keys parameter.
 
@@ -363,7 +355,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 {
   "grant_type" : "client_credentials",
   "scope" : ["Broker1/Temp", "subscriber"],
-  "get_pub_keys" : 0x01
+  "get_pub_keys" : [ ]
 }
 ~~~~~~~~~~~~
 {: #fig-post2-as2 title="Authorization + Key Distribution Request payload for a Subscriber"}
