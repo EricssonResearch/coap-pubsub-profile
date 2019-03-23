@@ -4,8 +4,8 @@
 
 ACE Working Group                                           F. Palombini
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                          March 21, 2019
-Expires: September 22, 2019
+Intended status: Standards Track                          March 23, 2019
+Expires: September 24, 2019
 
 
      CoAP Pub-Sub Profile for Authentication and Authorization for
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 22, 2019.
+   This Internet-Draft will expire on September 24, 2019.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Palombini              Expires September 22, 2019               [Page 1]
+Palombini              Expires September 24, 2019               [Page 1]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Palombini              Expires September 22, 2019               [Page 2]
+Palombini              Expires September 24, 2019               [Page 2]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -165,7 +165,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 3]
+Palombini              Expires September 24, 2019               [Page 3]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -221,7 +221,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 4]
+Palombini              Expires September 24, 2019               [Page 4]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -277,7 +277,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 5]
+Palombini              Expires September 24, 2019               [Page 5]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -333,7 +333,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 6]
+Palombini              Expires September 24, 2019               [Page 6]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -389,7 +389,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 7]
+Palombini              Expires September 24, 2019               [Page 7]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -445,7 +445,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 8]
+Palombini              Expires September 24, 2019               [Page 8]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -501,7 +501,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019               [Page 9]
+Palombini              Expires September 24, 2019               [Page 9]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -557,7 +557,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 10]
+Palombini              Expires September 24, 2019              [Page 10]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -613,7 +613,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 11]
+Palombini              Expires September 24, 2019              [Page 11]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -669,7 +669,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 12]
+Palombini              Expires September 24, 2019              [Page 12]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -725,7 +725,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 13]
+Palombini              Expires September 24, 2019              [Page 13]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -781,7 +781,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 14]
+Palombini              Expires September 24, 2019              [Page 14]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -837,7 +837,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 22, 2019              [Page 15]
+Palombini              Expires September 24, 2019              [Page 15]
 
 Internet-Draft             coap-pubsub-profile                March 2019
 
@@ -893,4 +893,4 @@ Author's Address
 
 
 
-Palombini              Expires September 22, 2019              [Page 16]
+Palombini              Expires September 24, 2019              [Page 16]
