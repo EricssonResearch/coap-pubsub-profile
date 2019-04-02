@@ -178,8 +178,7 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
 ~~~~~~~~~~~
     4.01 Unauthorized
     Content-Format: application/ace+cbor
-    {"AS1": "coaps://as1.example.com/token",
-     "AS2": "coaps://as2.example.com/pubsubkey"}
+    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
 ~~~~~~~~~~~
 {: #AS-info-ex title="AS1, AS2 Information example"}
 {: artwork-align="center"}
@@ -226,14 +225,15 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
   * profile set to "coap_pubsub"
   * scope parameter (optionally), set to a CBOR array containing the broker's topic as first element and the string "publisher" for publishers and "subscriber" for subscribers as second element
 - the following fields from the Key Distribution Response (Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}):
-  - "key" parameter including:
+  * kty parameter identifies a key type "Group_OSCON", as defined in TBD.
+  * key parameter, containing:
     * kty with value 4 (symmetric)
     * alg with value defined by the AS2 (Content Encryption Algorithm)
     * Base IV with value defined by the AS2
     * k with value the symmetric key value
     * OPTIONALLY, exp with the expiration time of the key
     * OPTIONALLY, kid with an identifier for the key value
-  - "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to the empty array in the Authorization + Key Distribution Request
+  * "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to the empty array in the Authorization + Key Distribution Request
 
 Examples for the response payload are detailed in {{fig-resp-as2}} and {{fig-resp2-as2}}.
 
