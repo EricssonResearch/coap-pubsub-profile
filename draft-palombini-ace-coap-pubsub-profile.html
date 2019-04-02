@@ -299,12 +299,12 @@ ul.toc li {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.22.0 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.22.2 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Palombini, F." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-palombini-ace-coap-pubsub-profile-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2019-03-23" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-04-02" />
   <meta name="dct.abstract" content="This specification defines a profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication." />
   <meta name="description" content="This specification defines a profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication." />
 
@@ -325,10 +325,10 @@ ul.toc li {
 </tr>
 <tr>
 <td class="left">Intended status: Standards Track</td>
-<td class="right">March 23, 2019</td>
+<td class="right">April 02, 2019</td>
 </tr>
 <tr>
-<td class="left">Expires: September 24, 2019</td>
+<td class="left">Expires: October 4, 2019</td>
 <td class="right"></td>
 </tr>
 
@@ -345,7 +345,7 @@ ul.toc li {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 24, 2019.</p>
+<p>This Internet-Draft will expire on October 4, 2019.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -483,8 +483,7 @@ ul.toc li {
 <pre>
     4.01 Unauthorized
     Content-Format: application/ace+cbor
-    {"AS1": "coaps://as1.example.com/token",
-     "AS2": "coaps://as2.example.com/pubsubkey"}
+    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
 </pre>
 <p class="figure">Figure 3: AS1, AS2 Information example</p>
 <p id="rfc.section.3.1.p.3">After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary.</p>
@@ -518,7 +517,8 @@ ul.toc li {
 </ul>
 </li>
 <li>the following fields from the Key Distribution Response (Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>): <ul>
-<li>&#8220;key&#8221; parameter including: <ul>
+<li>kty parameter identifies a key type &#8220;Group_OSCON&#8221;, as defined in TBD.</li>
+<li>key parameter, containing: <ul>
 <li>kty with value 4 (symmetric)</li>
 <li>alg with value defined by the AS2 (Content Encryption Algorithm)</li>
 <li>Base IV with value defined by the AS2</li>
@@ -774,7 +774,7 @@ ul.toc li {
 <tr>
 <td class="reference"><b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b></td>
 <td class="top">
-<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-22">Authentication and Authorization for Constrained Environments (ACE) using the OAuth 2.0 Framework (ACE-OAuth)</a>", Internet-Draft draft-ietf-ace-oauth-authz-22, March 2019.</td>
+<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-24">Authentication and Authorization for Constrained Environments (ACE) using the OAuth 2.0 Framework (ACE-OAuth)</a>", Internet-Draft draft-ietf-ace-oauth-authz-24, March 2019.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-core-coap-pubsub">[I-D.ietf-core-coap-pubsub]</b></td>

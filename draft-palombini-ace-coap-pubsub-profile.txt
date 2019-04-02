@@ -4,8 +4,8 @@
 
 ACE Working Group                                           F. Palombini
 Internet-Draft                                                  Ericsson
-Intended status: Standards Track                          March 23, 2019
-Expires: September 24, 2019
+Intended status: Standards Track                          April 02, 2019
+Expires: October 4, 2019
 
 
      CoAP Pub-Sub Profile for Authentication and Authorization for
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 24, 2019.
+   This Internet-Draft will expire on October 4, 2019.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Palombini              Expires September 24, 2019               [Page 1]
+Palombini                Expires October 4, 2019                [Page 1]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Palombini              Expires September 24, 2019               [Page 2]
+Palombini                Expires October 4, 2019                [Page 2]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
 2.  Profile Overview
@@ -165,9 +165,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 3]
+Palombini                Expires October 4, 2019                [Page 3]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    4.  The Publisher and the Subscriber securely post to and get
@@ -221,9 +221,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 4]
+Palombini                Expires October 4, 2019                [Page 4]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    The Publisher and the Subscriber map to the Client in
@@ -259,10 +259,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
    (Section 5.1.2).  An example using CBOR diagnostic notation is given
    below:
 
-                 4.01 Unauthorized
-                 Content-Format: application/ace+cbor
-                 {"AS1": "coaps://as1.example.com/token",
-                  "AS2": "coaps://as2.example.com/pubsubkey"}
+    4.01 Unauthorized
+    Content-Format: application/ace+cbor
+    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
 
                   Figure 3: AS1, AS2 Information example
 
@@ -277,9 +276,10 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 5]
+
+Palombini                Expires October 4, 2019                [Page 5]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    More specifically, the Client sends a POST request to the /token
@@ -333,9 +333,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 6]
+Palombini                Expires October 4, 2019                [Page 6]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
          for publishers and "subscriber" for subscribers as second
@@ -344,7 +344,10 @@ Internet-Draft             coap-pubsub-profile                March 2019
    o  the following fields from the Key Distribution Response
       (Section 4.2 of [I-D.palombini-ace-key-groupcomm]):
 
-      *  "key" parameter including:
+      *  kty parameter identifies a key type "Group_OSCON", as defined
+         in TBD.
+
+      *  key parameter, containing:
 
          +  kty with value 4 (symmetric)
 
@@ -386,12 +389,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-
-
-
-Palombini              Expires September 24, 2019               [Page 7]
+Palombini                Expires October 4, 2019                [Page 7]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
                         +----------------+   +----------------+
@@ -445,9 +445,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 8]
+Palombini                Expires October 4, 2019                [Page 8]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    (B) corresponds to the retrieval of the keying material to protect
@@ -501,9 +501,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019               [Page 9]
+Palombini                Expires October 4, 2019                [Page 9]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
                                      +----------------+
@@ -557,9 +557,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 10]
+Palombini                Expires October 4, 2019               [Page 10]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
                 {
@@ -613,9 +613,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 11]
+Palombini                Expires October 4, 2019               [Page 11]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    The (E) message corresponds to the publication of a topic on the
@@ -669,9 +669,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 12]
+Palombini                Expires October 4, 2019               [Page 12]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
       *  the kid (same value as the kid of the asymmetric COSE Key
@@ -725,9 +725,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 13]
+Palombini                Expires October 4, 2019               [Page 13]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    be set up and managed by the same entity having control of the topic,
@@ -781,9 +781,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 14]
+Palombini                Expires October 4, 2019               [Page 14]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
 9.  References
@@ -794,7 +794,7 @@ Internet-Draft             coap-pubsub-profile                March 2019
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
               Constrained Environments (ACE) using the OAuth 2.0
-              Framework (ACE-OAuth)", draft-ietf-ace-oauth-authz-22
+              Framework (ACE-OAuth)", draft-ietf-ace-oauth-authz-24
               (work in progress), March 2019.
 
    [I-D.ietf-core-coap-pubsub]
@@ -837,9 +837,9 @@ Internet-Draft             coap-pubsub-profile                March 2019
 
 
 
-Palombini              Expires September 24, 2019              [Page 15]
+Palombini                Expires October 4, 2019               [Page 15]
 
-Internet-Draft             coap-pubsub-profile                March 2019
+Internet-Draft             coap-pubsub-profile                April 2019
 
 
    [I-D.ietf-ace-dtls-authorize]
@@ -893,4 +893,4 @@ Author's Address
 
 
 
-Palombini              Expires September 24, 2019              [Page 16]
+Palombini                Expires October 4, 2019               [Page 16]
