@@ -292,7 +292,7 @@ Internet-Draft             coap-pubsub-profile                April 2019
       *  the grant type set to "client_credentials",
 
       *  OPTIONALLY, if needed, other additional parameters such as
-         "Client_id"
+         "client_id"
 
    o  the following fields from the Key Distribution Request
       (Section 4.1 of [I-D.ietf-ace-key-groupcomm]):
@@ -307,7 +307,7 @@ Internet-Draft             coap-pubsub-profile                April 2019
       *  the get_pub_keys parameter set to the empty array if the Client
          needs to retrieve the public keys of the other pubsub members
 
-      *  OPTIONALLY, if needed, the pub_keys_repos parameters
+      *  OPTIONALLY, if needed, the pub_keys_repos parameter
 
    Note that the alg parameter in the client_cred COSE_Key MUST be a
    signing algorithm, as defined in section 8 of [RFC8152].
@@ -359,8 +359,6 @@ Internet-Draft             coap-pubsub-profile                April 2019
 
          +  k with value the symmetric key value
 
-         +  OPTIONALLY, exp with the expiration time of the key
-
          +  OPTIONALLY, kid with an identifier for the key value
 
       *  "pub_keys", containing the public keys of all authorized
@@ -376,6 +374,8 @@ Internet-Draft             coap-pubsub-profile                April 2019
    In this section, it is specified how the Publisher requests, obtains
    and communicates to the Broker the access token, as well as the
    retrieval of the keying material to protect the publication.
+
+
 
 
 
@@ -574,6 +574,7 @@ Internet-Draft             coap-pubsub-profile                April 2019
    {
      "profile" : "coap_pubsub",
      "scope" : ["Broker1/Temp", "subscriber"],
+     "kty" : "COSE_Key"
      "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7',
      -1: h'02e2cc3a9b92855220f255fff1c615bc'},
      "pub_keys" : [
@@ -608,7 +609,6 @@ Internet-Draft             coap-pubsub-profile                April 2019
 
       Figure 10: Phase 3: Secure communication between Publisher and
                                 Subscriber
-
 
 
 
@@ -682,7 +682,7 @@ Internet-Draft             coap-pubsub-profile                April 2019
    o  The ciphertext, computed over the plaintext that MUST contain the
       CoAP payload.
 
-   The external_aad, when using AEAD, is an empty string.
+   The external_aad is an empty string.
 
    An example is given in Figure 12
 
@@ -754,7 +754,7 @@ Internet-Draft             coap-pubsub-profile                April 2019
    itself, which it cannot read nor modify.  In this setting, caching of
    publications on the Broker is still allowed.
 
-   TODO: expand on security and Privacy considerations
+   TODO: expand on security and privacy considerations
 
 8.  IANA Considerations
 

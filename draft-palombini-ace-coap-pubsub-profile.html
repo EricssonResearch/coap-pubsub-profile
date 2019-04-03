@@ -499,14 +499,14 @@ ul.toc li {
 <ul>
 <li>the following fields from the Authorization Request (Section 3.1 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>): <ul>
 <li>the grant type set to &#8220;client_credentials&#8221;,</li>
-<li>OPTIONALLY, if needed, other additional parameters such as &#8220;Client_id&#8221;</li>
+<li>OPTIONALLY, if needed, other additional parameters such as &#8220;client_id&#8221;</li>
 </ul>
 </li>
 <li>the following fields from the Key Distribution Request (Section 4.1 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>): <ul>
 <li>the client_cred parameter containing the Client&#8217;s public key, if the Client needs to directly send that to the AS2,</li>
 <li>the scope parameter set to a CBOR array containing the broker&#8217;s topic as first element and the string &#8220;publisher&#8221; for publishers and &#8220;subscriber&#8221; for subscribers as second element</li>
 <li>the get_pub_keys parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members</li>
-<li>OPTIONALLY, if needed, the pub_keys_repos parameters</li>
+<li>OPTIONALLY, if needed, the pub_keys_repos parameter</li>
 </ul>
 </li>
 </ul>
@@ -528,8 +528,7 @@ ul.toc li {
 <li>kty with value 4 (symmetric)</li>
 <li>alg with value defined by the AS2 (Content Encryption Algorithm)</li>
 <li>Base IV with value defined by the AS2</li>
-<li>k with value the symmetric key value</li>
-<li>OPTIONALLY, exp with the expiration time of the key</li>
+<li>k with value the symmetric key value </li>
 <li>OPTIONALLY, kid with an identifier for the key value</li>
 </ul>
 </li>
@@ -661,6 +660,7 @@ ul.toc li {
 {
   "profile" : "coap_pubsub",
   "scope" : ["Broker1/Temp", "subscriber"],
+  "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
   -1: h'02e2cc3a9b92855220f255fff1c615bc'},
   "pub_keys" : [
@@ -727,7 +727,7 @@ ul.toc li {
 </li>
 <li>The ciphertext, computed over the plaintext that MUST contain the CoAP payload.</li>
 </ul>
-<p id="rfc.section.6.1.p.5">The external_aad, when using AEAD, is an empty string.</p>
+<p id="rfc.section.6.1.p.5">The external_aad is an empty string.</p>
 <p id="rfc.section.6.1.p.6">An example is given in <a href="#fig-cose-ex" class="xref">Figure 12</a></p>
 <div id="rfc.figure.12"></div>
 <div id="fig-cose-ex"></div>
@@ -763,7 +763,7 @@ ul.toc li {
 <p id="rfc.section.7.p.2">An application where it is not critical that only authorized Publishers can publish on a topic may decide not to make use of the asymmetric crypto and only use symmetric encryption/MAC to confidentiality and integrity protect the publication, but this is not recommended since, as a result, any authorized Subscribers with access to the Broker may forge unauthorized publications without being detected. In this symmetric case the Subscribers would only need one symmetric key per topic, and would not need to know any information about the Publishers, that can be anonymous to it and the Broker.</p>
 <p id="rfc.section.7.p.3">Subscribers can be excluded from future publications through re-keying for a certain topic. This could be set up to happen on a regular basis, for certain applications. How this could be done is out of scope for this work.</p>
 <p id="rfc.section.7.p.4">The Broker is only trusted with verifying that the Publisher is authorized to publish, but is not trusted with the publications itself, which it cannot read nor modify. In this setting, caching of publications on the Broker is still allowed.</p>
-<p id="rfc.section.7.p.5">TODO: expand on security and Privacy considerations</p>
+<p id="rfc.section.7.p.5">TODO: expand on security and privacy considerations</p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
 </h1>
