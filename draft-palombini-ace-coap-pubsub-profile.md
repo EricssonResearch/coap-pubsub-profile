@@ -195,12 +195,12 @@ More specifically, the Client sends a POST request to the /token endpoint on AS2
 
 - the following fields from the Authorization Request (Section 3.1 of {{I-D.ietf-ace-key-groupcomm}}):
   * the grant type set to "client_credentials",
-  * OPTIONALLY, if needed, other additional parameters such as "Client_id"
+  * OPTIONALLY, if needed, other additional parameters such as "client_id"
 - the following fields from the Key Distribution Request (Section 4.1 of {{I-D.ietf-ace-key-groupcomm}}):
   * the client\_cred parameter containing the Client's public key, if the Client needs to directly send that to the AS2,
   * the scope parameter set to a CBOR array containing the broker's topic as first element and the string "publisher" for publishers and "subscriber" for subscribers as second element
   * the get_pub_keys parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
-  * OPTIONALLY, if needed, the pub_keys_repos parameters
+  * OPTIONALLY, if needed, the pub_keys_repos parameter
 
 Note that the alg parameter in the client_cred COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}.
 
@@ -231,7 +231,7 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
     * alg with value defined by the AS2 (Content Encryption Algorithm)
     * Base IV with value defined by the AS2
     * k with value the symmetric key value
-    * OPTIONALLY, exp with the expiration time of the key
+<!--    * OPTIONALLY, exp with the expiration time of the key COSE_Key does not contain exp, maybe add this-->
     * OPTIONALLY, kid with an identifier for the key value
   * "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to the empty array in the Authorization + Key Distribution Request
 
@@ -367,6 +367,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 {
   "profile" : "coap_pubsub",
   "scope" : ["Broker1/Temp", "subscriber"],
+  "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
   -1: h'02e2cc3a9b92855220f255fff1c615bc'},
   "pub_keys" : [
@@ -449,7 +450,7 @@ The COSE object is constructed in the following way:
   - the signature computed as specified in Section 4.5 of {{RFC8152}}
 * The ciphertext, computed over the plaintext that MUST contain the CoAP payload.
 
-The external_aad, when using AEAD, is an empty string.
+The external_aad is an empty string.
 
 An example is given in {{fig-cose-ex}}
 
@@ -491,7 +492,7 @@ Subscribers can be excluded from future publications through re-keying for a cer
 
 The Broker is only trusted with verifying that the Publisher is authorized to publish, but is not trusted with the publications itself, which it cannot read nor modify. In this setting, caching of publications on the Broker is still allowed.
 
-TODO: expand on security and Privacy considerations
+TODO: expand on security and privacy considerations
 
 # IANA Considerations
 
