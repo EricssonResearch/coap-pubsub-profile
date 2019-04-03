@@ -178,7 +178,8 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
 ~~~~~~~~~~~
     4.01 Unauthorized
     Content-Format: application/ace+cbor
-    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
+    {"AS": "coaps://as1.example.com/token,
+    coaps://as2.example.com/pubsubkey"}
 ~~~~~~~~~~~
 {: #AS-info-ex title="AS1, AS2 Information example"}
 {: artwork-align="center"}
@@ -511,7 +512,7 @@ CBOR Key: TBD
 
 Reference: \[\[This document\]\]
 
-## ACE Groupcomm Key {#iana-ace-groupcomm-key}
+## ACE Groupcomm Key Registry {#iana-ace-groupcomm-key}
 
 The following registrations are done for the ACE Groupcomm Key Registry following the procedure specified in {{I-D.ietf-ace-key-groupcomm}}.
 
