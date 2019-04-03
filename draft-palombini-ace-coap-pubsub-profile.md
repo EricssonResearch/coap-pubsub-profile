@@ -266,7 +266,7 @@ In this section, it is specified how the Publisher requests, obtains and communi
 
 This is a combination of two independent phases:
 
-* one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCOAP {{I-D.ietf-ace-oscore-profile}}. (A)(C)
+* one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCORE {{I-D.ietf-ace-oscore-profile}}. (A)(C)
 * the other is the Publisher's retrieval of keying material to protect the publication. (B)
 
 In detail:
@@ -274,7 +274,7 @@ In detail:
 (A) corresponds to the Access Token Request and Response between Publisher and Authorization Server to retrieve the Access Token and RS (Broker) Information.
 As specified, the Publisher has the role of a CoAP client, the Broker has the role of the CoAP server.
 
-(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols. Depending on the application, there may not be the need for this set up phase: for example, if OSCOAP is used directly.
+(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols. Depending on the application, there may not be the need for this set up phase: for example, if OSCORE is used directly.
 
 (A) and (C) details are specified in the profile used.
 
@@ -306,7 +306,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 ~~~~~~~~~~~~
 {
   "profile" : "coap_pubsub",
-  "kty" : "Group_OSCON",
+  "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
   -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
 }
