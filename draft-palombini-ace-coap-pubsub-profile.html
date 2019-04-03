@@ -293,7 +293,7 @@ ul.toc li {
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
 <link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations">
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 ACE OAuth Profile Registry">
-<link href="#rfc.section.8.2" rel="Chapter" title="8.2 ACE Groupcomm Key">
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 ACE Groupcomm Key Registry">
 <link href="#rfc.references" rel="Chapter" title="9 References">
 <link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References">
 <link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References">
@@ -381,7 +381,7 @@ ul.toc li {
 </li>
 <ul><li>8.1.   <a href="#rfc.section.8.1">ACE OAuth Profile Registry</a>
 </li>
-<li>8.2.   <a href="#rfc.section.8.2">ACE Groupcomm Key</a>
+<li>8.2.   <a href="#rfc.section.8.2">ACE Groupcomm Key Registry</a>
 </li>
 </ul><li>9.   <a href="#rfc.references">References</a>
 </li>
@@ -489,7 +489,8 @@ ul.toc li {
 <pre>
     4.01 Unauthorized
     Content-Format: application/ace+cbor
-    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
+    {"AS": "coaps://as1.example.com/token,
+    coaps://as2.example.com/pubsubkey"}
 </pre>
 <p class="figure">Figure 3: AS1, AS2 Information example</p>
 <p id="rfc.section.3.1.p.3">After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary.</p>
@@ -777,7 +778,7 @@ ul.toc li {
 <p id="rfc.section.8.1.p.5">CBOR Key: TBD</p>
 <p id="rfc.section.8.1.p.6">Reference: [[This document]]</p>
 <h1 id="rfc.section.8.2">
-<a href="#rfc.section.8.2">8.2.</a> <a href="#iana-ace-groupcomm-key" id="iana-ace-groupcomm-key">ACE Groupcomm Key</a>
+<a href="#rfc.section.8.2">8.2.</a> <a href="#iana-ace-groupcomm-key" id="iana-ace-groupcomm-key">ACE Groupcomm Key Registry</a>
 </h1>
 <p id="rfc.section.8.2.p.1">The following registrations are done for the ACE Groupcomm Key Registry following the procedure specified in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>.</p>
 <p id="rfc.section.8.2.p.2">Note to RFC Editor: Please replace all occurrences of &#8220;[[This document]]&#8221; with the RFC number of this specification and delete this paragraph.</p>

@@ -76,7 +76,7 @@ Table of Contents
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
      8.1.  ACE OAuth Profile Registry  . . . . . . . . . . . . . . .  14
-     8.2.  ACE Groupcomm Key . . . . . . . . . . . . . . . . . . . .  15
+     8.2.  ACE Groupcomm Key Registry  . . . . . . . . . . . . . . .  15
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  16
@@ -259,9 +259,10 @@ Internet-Draft             coap-pubsub-profile                April 2019
    (Section 5.1.2).  An example using CBOR diagnostic notation is given
    below:
 
-    4.01 Unauthorized
-    Content-Format: application/ace+cbor
-    {"AS": "coaps://as1.example.com/token,coaps://as2.example.com/pubsubkey"}
+                    4.01 Unauthorized
+                    Content-Format: application/ace+cbor
+                    {"AS": "coaps://as1.example.com/token,
+                    coaps://as2.example.com/pubsubkey"}
 
                   Figure 3: AS1, AS2 Information example
 
@@ -272,7 +273,6 @@ Internet-Draft             coap-pubsub-profile                April 2019
    merging these two messages is that the AS2 is both the AS and the
    KDC, in this setting, so the Authorization Response and the Post
    Token message are not necessary.
-
 
 
 
@@ -786,7 +786,7 @@ Palombini                Expires October 5, 2019               [Page 14]
 Internet-Draft             coap-pubsub-profile                April 2019
 
 
-8.2.  ACE Groupcomm Key
+8.2.  ACE Groupcomm Key Registry
 
    The following registrations are done for the ACE Groupcomm Key
    Registry following the procedure specified in
