@@ -67,7 +67,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Profile Overview  . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  coap_pubsub Profile . . . . . . . . . . . . . . . . . . . . .   4
+   3.  coap_pubsub Profile . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  Retrieval of COSE Key for protection of content . . . . .   5
    4.  Publisher . . . . . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Subscriber  . . . . . . . . . . . . . . . . . . . . . . . . .  10
@@ -121,11 +121,12 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 2.  Profile Overview
 
-   The objective of this document is to specify how to protect a CoAP
-   pub-sub communication, as described in [I-D.ietf-core-coap-pubsub],
-   using [I-D.ietf-ace-key-groupcomm], which itself expands the Ace
-   framework ([I-D.ietf-ace-oauth-authz]), and profiles
-   ([I-D.ietf-ace-dtls-authorize], [I-D.ietf-ace-oscore-profile]).
+   The objective of this document is to specify how to authorize nodes,
+   provide keys, and protect a CoAP pub-sub communication, as described
+   in [I-D.ietf-core-coap-pubsub], using [I-D.ietf-ace-key-groupcomm],
+   which itself expands the Ace framework ([I-D.ietf-ace-oauth-authz]),
+   and profiles ([I-D.ietf-ace-dtls-authorize],
+   [I-D.ietf-ace-oscore-profile]).
 
    The architecture of the scenario is shown in Figure 1.
 
@@ -160,8 +161,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
    There are four phases, the first three can be done in parallel.
 
-   1.  The Publisher requests publishing access to the Broker at the
-       AS1, and communicates with the Broker to set up security.
+
 
 
 
@@ -169,6 +169,9 @@ Palombini                Expires January 9, 2020                [Page 3]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
+
+   1.  The Publisher requests publishing access to the Broker at the
+       AS1, and communicates with the Broker to set up security.
 
    2.  The Publisher requests access to a specific topic at the AS2
 
@@ -213,10 +216,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    joining nodes about specific topics.  How the policies are exchanged
    is out of scope for this profile.
 
-3.  coap_pubsub Profile
 
-   This profile uses [I-D.ietf-ace-key-groupcomm], which expands the ACE
-   framework.  This document specifies which exact parameters from
 
 
 
@@ -226,6 +226,10 @@ Palombini                Expires January 9, 2020                [Page 4]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
+3.  coap_pubsub Profile
+
+   This profile uses [I-D.ietf-ace-key-groupcomm], which expands the ACE
+   framework.  This document specifies which exact parameters from
    [I-D.ietf-ace-key-groupcomm] have to be used, and the values for each
    parameter.
 
@@ -269,11 +273,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
                   Figure 3: AS1, AS2 Information example
 
-   After retrieving the AS2 address, the Client sends an Authorization +
-   Key Distribution Request, which is an Authorization Request merged
-   with a Key Distribution Request, as described in
-   [I-D.ietf-ace-key-groupcomm], Sections 3.1 and 4.1.  The reason for
-   merging these two messages is that the AS2 is both the AS and the
+
 
 
 
@@ -282,6 +282,11 @@ Palombini                Expires January 9, 2020                [Page 5]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
+   After retrieving the AS2 address, the Client sends an Authorization +
+   Key Distribution Request, which is an Authorization Request merged
+   with a Key Distribution Request, as described in
+   [I-D.ietf-ace-key-groupcomm], Sections 3.1 and 4.1.  The reason for
+   merging these two messages is that the AS2 is both the AS and the
    KDC, in this setting, so the Authorization Response and the Post
    Token message are not necessary.
 
@@ -326,17 +331,16 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    Examples of the payload of a Authorization + Key Distribution Request
    are specified in Figure 5 and Figure 8.
 
-   The AS2 verifies that the Client is authorized to access the topic
-   and, if the 'client_cred' parameter is present, stores the public key
-   of the Client.
-
-
 
 
 Palombini                Expires January 9, 2020                [Page 6]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
+
+   The AS2 verifies that the Client is authorized to access the topic
+   and, if the 'client_cred' parameter is present, stores the public key
+   of the Client.
 
    The AS2 response is an Authorization + Key Distribution Response, see
    Section 4.2 of [I-D.ietf-ace-key-groupcomm], with Content-Format =
@@ -381,11 +385,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
       *  'pub_keys', containing the public keys of all authorized
          signing members formatted as COSE_Keys, if the 'get_pub_keys'
-         parameter was present and set to the empty array in the
-         Authorization + Key Distribution Request
 
-   Examples for the response payload are detailed in Figure 6 and
-   Figure 9.
 
 
 
@@ -393,6 +393,12 @@ Palombini                Expires January 9, 2020                [Page 7]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
+
+         parameter was present and set to the empty array in the
+         Authorization + Key Distribution Request
+
+   Examples for the response payload are detailed in Figure 6 and
+   Figure 9.
 
 4.  Publisher
 
@@ -437,12 +443,6 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    RS (Broker) Information.  As specified, the Publisher has the role of
    a CoAP client, the Broker has the role of the CoAP server.
 
-   (C) corresponds to the exchange between Publisher and Broker, where
-   the Publisher sends its access token to the Broker and establishes a
-   secure connection with the Broker.  Depending on the Information
-   received in (A), this can be for example DTLS handshake, or other
-
-
 
 
 Palombini                Expires January 9, 2020                [Page 8]
@@ -450,6 +450,10 @@ Palombini                Expires January 9, 2020                [Page 8]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
+   (C) corresponds to the exchange between Publisher and Broker, where
+   the Publisher sends its access token to the Broker and establishes a
+   secure connection with the Broker.  Depending on the Information
+   received in (A), this can be for example DTLS handshake, or other
    protocols.  Depending on the application, there may not be the need
    for this set up phase: for example, if OSCORE is used directly.
 
@@ -494,10 +498,6 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
      Figure 6: Authorization + Key Distribution Response payload for a
                                  Publisher
-
-
-
-
 
 
 
