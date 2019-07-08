@@ -165,6 +165,10 @@ This phase is common to both Publisher and Subscriber. To maintain the generalit
       |                                |                 |
       | [<-- AS1, AS2 Information ---] |                 |
       |                                                  |
+      | [------ Pub Key Format Negociation Request --->] |
+      |                                                  |
+      | [<---- Pub Key Format Negociation Response ----] |
+      |                                                  |
       | -- Authorization + Key Distribution Request ---> |
       |                                                  |
       | <-- Authorization + Key Distribution Response -- |
@@ -190,7 +194,9 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
  The broker _may_ send this info to both pub and sub, and then the subscriber could just discard the AS it does not need (AS1). Or the sub could know what AS to contact from a different exchange.
 -->
 
-After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in {{I-D.ietf-ace-key-groupcomm}}, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
+After retrieving the AS2 address, the Client MAY send a Pub Key Format Negociation Request to the AS, in order to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. This request is a subset of the Token Post request defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically including the parameters 'sign_info' and 'pub_key_enc'. The AS MUST respond with the response defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically including the same  parameters 'sign_info' and 'pub_key_enc'.
+
+After that, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in {{I-D.ietf-ace-key-groupcomm}}, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
 
 More specifically, the Client sends a POST request to the /token endpoint on AS2, with Content-Format = "application/ace+cbor" that MUST contain in the payload (formatted as a CBOR map):
 
