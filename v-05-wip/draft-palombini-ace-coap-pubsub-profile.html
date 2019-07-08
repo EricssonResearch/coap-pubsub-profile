@@ -481,6 +481,10 @@ ul.toc li {
       |                                |                 |
       | [&lt;-- AS1, AS2 Information ---] |                 |
       |                                                  |
+      | [------ Pub Key Format Negociation Request ---&gt;] |
+      |                                                  |
+      | [&lt;---- Pub Key Format Negociation Response ----] |
+      |                                                  |
       | -- Authorization + Key Distribution Request ---&gt; |
       |                                                  |
       | &lt;-- Authorization + Key Distribution Response -- |
@@ -497,8 +501,9 @@ ul.toc li {
     coaps://as2.example.com/pubsubkey"}
 </pre>
 <p class="figure">Figure 3: AS1, AS2 Information example</p>
-<p id="rfc.section.3.1.p.3">After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary.</p>
-<p id="rfc.section.3.1.p.4">More specifically, the Client sends a POST request to the /token endpoint on AS2, with Content-Format = &#8220;application/ace+cbor&#8221; that MUST contain in the payload (formatted as a CBOR map):</p>
+<p id="rfc.section.3.1.p.3">After retrieving the AS2 address, the Client MAY send a Pub Key Format Negociation Request to the AS, in order to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. This request is a subset of the Token Post request defined in Section 3.3 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, specifically including the parameters &#8216;sign_info&#8217; and &#8216;pub_key_enc&#8217;. The AS MUST respond with the response defined in Section 3.3 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, specifically including the same  parameters &#8216;sign_info&#8217; and &#8216;pub_key_enc&#8217;.</p>
+<p id="rfc.section.3.1.p.4">After that, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary.</p>
+<p id="rfc.section.3.1.p.5">More specifically, the Client sends a POST request to the /token endpoint on AS2, with Content-Format = &#8220;application/ace+cbor&#8221; that MUST contain in the payload (formatted as a CBOR map):</p>
 <p></p>
 
 <ul>
@@ -520,10 +525,10 @@ ul.toc li {
 </ul>
 </li>
 </ul>
-<p id="rfc.section.3.1.p.6">Note that the alg parameter in the &#8216;client_cred&#8217; COSE_Key MUST be a signing algorithm, as defined in section 8 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
-<p id="rfc.section.3.1.p.7">Examples of the payload of a Authorization + Key Distribution Request are specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-post2-as2" class="xref">Figure 8</a>.</p>
-<p id="rfc.section.3.1.p.8">The AS2 verifies that the Client is authorized to access the topic and, if the &#8216;client_cred&#8217; parameter is present, stores the public key of the Client.</p>
-<p id="rfc.section.3.1.p.9">The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, with Content-Format = &#8220;application/ace+cbor&#8221;. The payload (formatted as a CBOR map) MUST contain:</p>
+<p id="rfc.section.3.1.p.7">Note that the alg parameter in the &#8216;client_cred&#8217; COSE_Key MUST be a signing algorithm, as defined in section 8 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
+<p id="rfc.section.3.1.p.8">Examples of the payload of a Authorization + Key Distribution Request are specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-post2-as2" class="xref">Figure 8</a>.</p>
+<p id="rfc.section.3.1.p.9">The AS2 verifies that the Client is authorized to access the topic and, if the &#8216;client_cred&#8217; parameter is present, stores the public key of the Client.</p>
+<p id="rfc.section.3.1.p.10">The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, with Content-Format = &#8220;application/ace+cbor&#8221;. The payload (formatted as a CBOR map) MUST contain:</p>
 <p></p>
 
 <ul>
@@ -552,7 +557,7 @@ ul.toc li {
 </ul>
 </li>
 </ul>
-<p id="rfc.section.3.1.p.11">Examples for the response payload are detailed in <a href="#fig-resp-as2" class="xref">Figure 6</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
+<p id="rfc.section.3.1.p.12">Examples for the response payload are detailed in <a href="#fig-resp-as2" class="xref">Figure 6</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#publisher" id="publisher">Publisher</a>
 </h1>

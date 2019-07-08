@@ -71,18 +71,18 @@ Table of Contents
      3.1.  Retrieval of COSE Key for protection of content . . . . .   5
    4.  Publisher . . . . . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Subscriber  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-   6.  Pub-Sub Protected Communication . . . . . . . . . . . . . . .  11
-     6.1.  Using COSE Objects To Protect The Resource Representation  12
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
-     8.1.  ACE Groupcomm Profile Registry  . . . . . . . . . . . . .  15
-     8.2.  ACE Groupcomm Key Registry  . . . . . . . . . . . . . . .  15
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  16
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  16
-   Appendix A.  Requirements on Application Profiles . . . . . . . .  17
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
+   6.  Pub-Sub Protected Communication . . . . . . . . . . . . . . .  12
+     6.1.  Using COSE Objects To Protect The Resource Representation  13
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
+     8.1.  ACE Groupcomm Profile Registry  . . . . . . . . . . . . .  16
+     8.2.  ACE Groupcomm Key Registry  . . . . . . . . . . . . . . .  16
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  17
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  17
+   Appendix A.  Requirements on Application Profiles . . . . . . . .  18
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  19
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -251,6 +251,10 @@ Internet-Draft             coap-pubsub-profile                 July 2019
               |                                |                 |
               | [<-- AS1, AS2 Information ---] |                 |
               |                                                  |
+              | [------ Pub Key Format Negociation Request --->] |
+              |                                                  |
+              | [<---- Pub Key Format Negociation Response ----] |
+              |                                                  |
               | -- Authorization + Key Distribution Request ---> |
               |                                                  |
               | <-- Authorization + Key Distribution Response -- |
@@ -266,12 +270,8 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    (Section 5.1.2).  An example using CBOR diagnostic notation is given
    below:
 
-                    4.01 Unauthorized
-                    Content-Format: application/ace+cbor
-                    {"AS": "coaps://as1.example.com/token,
-                    coaps://as2.example.com/pubsubkey"}
 
-                  Figure 3: AS1, AS2 Information example
+
 
 
 
@@ -282,13 +282,30 @@ Palombini                Expires January 9, 2020                [Page 5]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
-   After retrieving the AS2 address, the Client sends an Authorization +
-   Key Distribution Request, which is an Authorization Request merged
-   with a Key Distribution Request, as described in
-   [I-D.ietf-ace-key-groupcomm], Sections 3.1 and 4.1.  The reason for
-   merging these two messages is that the AS2 is both the AS and the
-   KDC, in this setting, so the Authorization Response and the Post
-   Token message are not necessary.
+                    4.01 Unauthorized
+                    Content-Format: application/ace+cbor
+                    {"AS": "coaps://as1.example.com/token,
+                    coaps://as2.example.com/pubsubkey"}
+
+                  Figure 3: AS1, AS2 Information example
+
+   After retrieving the AS2 address, the Client MAY send a Pub Key
+   Format Negociation Request to the AS, in order to request necessary
+   information concerning the public keys in the group, as well as
+   concerning the algorithm and related parameters for computing
+   signatures in the group.  This request is a subset of the Token Post
+   request defined in Section 3.3 of [I-D.ietf-ace-key-groupcomm],
+   specifically including the parameters 'sign_info' and 'pub_key_enc'.
+   The AS MUST respond with the response defined in Section 3.3 of
+   [I-D.ietf-ace-key-groupcomm], specifically including the same
+   parameters 'sign_info' and 'pub_key_enc'.
+
+   After that, the Client sends an Authorization + Key Distribution
+   Request, which is an Authorization Request merged with a Key
+   Distribution Request, as described in [I-D.ietf-ace-key-groupcomm],
+   Sections 3.1 and 4.1.  The reason for merging these two messages is
+   that the AS2 is both the AS and the KDC, in this setting, so the
+   Authorization Response and the Post Token message are not necessary.
 
    More specifically, the Client sends a POST request to the /token
    endpoint on AS2, with Content-Format = "application/ace+cbor" that
@@ -313,6 +330,14 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
       *  'scope' parameter set to a CBOR array containing:
 
+
+
+
+Palombini                Expires January 9, 2020                [Page 6]
+
+Internet-Draft             coap-pubsub-profile                 July 2019
+
+
          +  the broker's topic as first element, and
 
          +  the string "publisher" if the client request to be a
@@ -330,13 +355,6 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
    Examples of the payload of a Authorization + Key Distribution Request
    are specified in Figure 5 and Figure 8.
-
-
-
-Palombini                Expires January 9, 2020                [Page 6]
-
-Internet-Draft             coap-pubsub-profile                 July 2019
-
 
    The AS2 verifies that the Client is authorized to access the topic
    and, if the 'client_cred' parameter is present, stores the public key
@@ -367,6 +385,15 @@ Internet-Draft             coap-pubsub-profile                 July 2019
       *  'kty' identifies a key type "COSE_Key", as defined in
          Section 8.2.
 
+
+
+
+
+Palombini                Expires January 9, 2020                [Page 7]
+
+Internet-Draft             coap-pubsub-profile                 July 2019
+
+
       *  'key', which contains a "COSE_Key" object (defined in
          [RFC8152], containing:
 
@@ -385,15 +412,6 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
       *  'pub_keys', containing the public keys of all authorized
          signing members formatted as COSE_Keys, if the 'get_pub_keys'
-
-
-
-
-Palombini                Expires January 9, 2020                [Page 7]
-
-Internet-Draft             coap-pubsub-profile                 July 2019
-
-
          parameter was present and set to the empty array in the
          Authorization + Key Distribution Request
 
@@ -405,6 +423,32 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    In this section, it is specified how the Publisher requests, obtains
    and communicates to the Broker the access token, as well as the
    retrieval of the keying material to protect the publication.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Palombini                Expires January 9, 2020                [Page 8]
+
+Internet-Draft             coap-pubsub-profile                 July 2019
+
 
                         +----------------+   +----------------+
                         |                |   |                |
@@ -443,13 +487,6 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    RS (Broker) Information.  As specified, the Publisher has the role of
    a CoAP client, the Broker has the role of the CoAP server.
 
-
-
-Palombini                Expires January 9, 2020                [Page 8]
-
-Internet-Draft             coap-pubsub-profile                 July 2019
-
-
    (C) corresponds to the exchange between Publisher and Broker, where
    the Publisher sends its access token to the Broker and establishes a
    secure connection with the Broker.  Depending on the Information
@@ -461,6 +498,14 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
    (B) corresponds to the retrieval of the keying material to protect
    the publication end-to-end with the subscribers (see Section 6.1),
+
+
+
+Palombini                Expires January 9, 2020                [Page 9]
+
+Internet-Draft             coap-pubsub-profile                 July 2019
+
+
    and uses [I-D.ietf-ace-key-groupcomm].  The details are defined in
    Section 3.1.
 
@@ -499,17 +544,23 @@ Internet-Draft             coap-pubsub-profile                 July 2019
      Figure 6: Authorization + Key Distribution Response payload for a
                                  Publisher
 
-
-
-Palombini                Expires January 9, 2020                [Page 9]
-
-Internet-Draft             coap-pubsub-profile                 July 2019
-
-
 5.  Subscriber
 
    In this section, it is specified how the Subscriber retrieves the
    keying material to protect the publication.
+
+
+
+
+
+
+
+
+
+Palombini                Expires January 9, 2020               [Page 10]
+
+Internet-Draft             coap-pubsub-profile                 July 2019
+
 
                                      +----------------+
                                      |                |
@@ -557,7 +608,12 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 10]
+
+
+
+
+
+Palombini                Expires January 9, 2020               [Page 11]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -613,7 +669,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 11]
+Palombini                Expires January 9, 2020               [Page 12]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -669,7 +725,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 12]
+Palombini                Expires January 9, 2020               [Page 13]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -725,7 +781,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 13]
+Palombini                Expires January 9, 2020               [Page 14]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -781,7 +837,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 14]
+Palombini                Expires January 9, 2020               [Page 15]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -837,7 +893,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 15]
+Palombini                Expires January 9, 2020               [Page 16]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -893,7 +949,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
 
 
 
-Palombini                Expires January 9, 2020               [Page 16]
+Palombini                Expires January 9, 2020               [Page 17]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -949,7 +1005,7 @@ Appendix A.  Requirements on Application Profiles
 
 
 
-Palombini                Expires January 9, 2020               [Page 17]
+Palombini                Expires January 9, 2020               [Page 18]
 
 Internet-Draft             coap-pubsub-profile                 July 2019
 
@@ -1005,4 +1061,4 @@ Author's Address
 
 
 
-Palombini                Expires January 9, 2020               [Page 18]
+Palombini                Expires January 9, 2020               [Page 19]
