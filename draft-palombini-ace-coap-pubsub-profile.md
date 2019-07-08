@@ -62,7 +62,7 @@ described in {{I-D.ietf-ace-oauth-authz}}, {{I-D.ietf-ace-key-groupcomm}} and {{
 
 # Profile Overview {#overview}
 
-The objective of this document is to specify how to protect a CoAP pub-sub communication, as described in {{I-D.ietf-core-coap-pubsub}}, using {{I-D.ietf-ace-key-groupcomm}}, which itself expands the Ace framework ({{I-D.ietf-ace-oauth-authz}}), and profiles ({{I-D.ietf-ace-dtls-authorize}}, {{I-D.ietf-ace-oscore-profile}}).
+The objective of this document is to specify how to authorize nodes, provide keys, and protect a CoAP pub-sub communication, as described in {{I-D.ietf-core-coap-pubsub}}, using {{I-D.ietf-ace-key-groupcomm}}, which itself expands the Ace framework ({{I-D.ietf-ace-oauth-authz}}), and profiles ({{I-D.ietf-ace-dtls-authorize}}, {{I-D.ietf-ace-oscore-profile}}).
 
 The architecture of the scenario is shown in {{archi}}.
 
