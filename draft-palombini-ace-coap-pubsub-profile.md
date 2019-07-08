@@ -49,7 +49,7 @@ This specification defines a profile for authentication and authorization for pu
 
 # Introduction
 
-The publisher-subscriber setting allows for devices with limited reachability to communicate via a broker that enables store-and-forward messaging between the devices. The pub-sub scenario using the Constrained Application Protocol (CoAP) is specified in {{I-D.ietf-core-coap-pubsub}}. This document defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework {{I-D.ietf-ace-oauth-authz}}.
+The publisher-subscriber setting allows for devices with limited reachability to communicate via a broker that enables store-and-forward messaging between the devices. The pub-sub scenario using the Constrained Application Protocol (CoAP) is specified in {{I-D.ietf-core-coap-pubsub}}. This document defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework {{I-D.ietf-ace-oauth-authz}}, and to provide the keys for protecting the communication between these nodes.
 
 ## Terminology
 
@@ -202,7 +202,7 @@ More specifically, the Client sends a POST request to the /token endpoint on AS2
   * 'client\_cred' parameter containing the Client's public key formatted as a COSE_Key, if the Client needs to directly send that to the AS2,
   * 'scope' parameter set to a CBOR array containing:
     - the broker's topic as first element, and 
-    - the string "publisher" for publishers and "subscriber" for subscribers as second element
+    - the string "publisher" if the client request to be a publisher, "subscriber" if the client request to be a subscriber, or a CBOR array containing both, if the client request to be both.
   * 'get_pub_keys' parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
   * OPTIONALLY, if needed, the 'pub_keys_repos' parameter
 
@@ -226,10 +226,10 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
   Are you sure this comment should be in this section? To a subscriber, yes, the set of all signers keys are returned (see {{subs-profile}} section: "The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers..."). If you did mean it for publishers, I don't see why.
 -->
 - the following fields from the Authorization Response (Section 3.2 of {{I-D.ietf-ace-key-groupcomm}}):
-  * 'profile' set to "coap_pubsub"
+  * 'profile' set to "coap_pubsub", as specified in {{iana-profile}}
   * OPTIONALLY 'scope', set to a CBOR array containing:
     - the broker's topic as first element, and
-    - the string "publisher" if the client is an authorized publisher and "subscriber" if the client is an authorized subscriber, as second element
+    - the string "publisher" if the client is an authorized publisher, "subscriber" if the client is an authorized subscriber, or a CBOR array containing both, if the client is authorized to be both.
 - the following fields from the Key Distribution Response (Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}):
   * 'kty' identifies a key type "COSE_Key", as defined in {{iana-ace-groupcomm-key}}.
   * 'key', which contains a "COSE_Key" object (defined in {{RFC8152}}, containing:
@@ -284,7 +284,7 @@ As specified, the Publisher has the role of a CoAP client, the Broker has the ro
 
 (A) and (C) details are specified in the profile used.
 
-(B) corresponds to the retrieval of the keying material to protect the publication, and uses {{I-D.ietf-ace-key-groupcomm}}. The details are defined in {{retr-cosekey}}.
+(B) corresponds to the retrieval of the keying material to protect the publication end-to-end with the subscribers (see {{oscon}}), and uses {{I-D.ietf-ace-key-groupcomm}}. The details are defined in {{retr-cosekey}}.
 
 An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}.
 
@@ -350,7 +350,7 @@ In this section, it is specified how the Subscriber retrieves the keying materia
 {: #pubsub-2 title="Phase 2: Subscriber side"}
 {: artwork-align="center"}
 
-Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication.  The details are defined in {{retr-cosekey}}
+Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication end-to-end with the publishers (see {{oscon}}).  The details are defined in {{retr-cosekey}}
 
 This step is the same as (B) between Publisher and AS2 ({{retr-cosekey}}), with the following differences:
 
@@ -410,7 +410,7 @@ Right, the key is the same ("key" in previous sections), but the IV is different
  What do you mean by "observer number"?
 -->
 
-This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place.
+This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place. The operations of publishing and subscribing are defined in {{I-D.ietf-core-coap-pubsub}}.
 
 ~~~~~~~~~~~~       
 +------------+             +------------+              +------------+  
@@ -426,7 +426,7 @@ This section specifies the communication Publisher-Broker and Subscriber-Broker,
 
 The (E) message corresponds to the publication of a topic on the Broker.
 The publication (the resource representation) is protected with COSE ({{RFC8152}}).
-The (F) message is the subscription of the Subscriber, which is unprotected.
+The (F) message is the subscription of the Subscriber, which is unprotected, unless a profile of ACE {{I-D.ietf-ace-oauth-authz}} is used between Subscriber and Broker.
 The (G) message is the response from the Broker, where the publication is protected with COSE.
 
 The flow graph is presented below.
@@ -443,7 +443,7 @@ The flow graph is presented below.
 {: #E-F-G-ex title="(E), (F), (G): Example of protected communication"}
 {: artwork-align="center"}
 
-## Using COSE Objects to protect the resource representation
+## Using COSE Objects To Protect The Resource Representation {#oscon}
 
 The Publisher uses the symmetric COSE Key received from AS2 in exchange B ({{retr-cosekey}}) to protect the payload of the PUBLISH operation (Section 4.3 of {{I-D.ietf-core-coap-pubsub}}). Specifically, the COSE Key is used to create a COSE\_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B ({{retr-cosekey}}) to countersign the COSE Object as specified in Section 4.5 of {{RFC8152}}. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.
 
@@ -451,11 +451,11 @@ The Subscriber uses the kid in the countersignature field in the COSE object to 
 
 The COSE object is constructed in the following way:
 
-* The protected Headers (as described in Section 3 of {{RFC8152}}) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in {{retr-cosekey}} and MUST contain the content encryption algorithm 
-* The unprotected Headers MUST contain the Partial IV and the counter signature that includes:
-  - the algorithm (same value as in the asymmetric COSE Key received in (B)) in the protected header
-  - the kid (same value as the kid of the asymmetric COSE Key received in (B)) in the unprotected header
-  - the signature computed as specified in Section 4.5 of {{RFC8152}}
+* The protected Headers (as described in Section 3 of {{RFC8152}}) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in {{retr-cosekey}} and MUST contain the content encryption algorithm.
+* The unprotected Headers MUST contain the Partial IV, with value a sequence number that is incremented for every message sent, and the counter signature that includes:
+  - the algorithm (same value as in the asymmetric COSE Key received in (B)) in the protected header;
+  - the kid (same value as the kid of the asymmetric COSE Key received in (B)) in the unprotected header;
+  - the signature computed as specified in Section 4.5 of {{RFC8152}}.
 * The ciphertext, computed over the plaintext that MUST contain the CoAP payload.
 
 The external_aad is an empty string.
