@@ -147,13 +147,13 @@ FP: Yes, the broker should be notified of revocation. This is not specified here
 
 Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this profile.
 
-# coap_pubsub Profile {#profile}
+# coap_pubsub_app Profile {#profile}
 
 This profile uses {{I-D.ietf-ace-key-groupcomm}}, which expands the ACE framework. This document specifies which exact parameters from {{I-D.ietf-ace-key-groupcomm}} have to be used, and the values for each parameter.
 
 The Publisher and the Subscriber map to the Client in {{I-D.ietf-ace-key-groupcomm}}, the AS2 maps to the AS and to the KDC, the Broker maps to the Dispatcher.
 
-Note that both publishers and subscribers use the same profile, called "coap_pubsub".
+Note that both publishers and subscribers use the same profile, called "coap_pubsub_app".
 
 ## Retrieval of COSE Key for protection of content {#retr-cosekey}
 
@@ -232,7 +232,7 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
   Are you sure this comment should be in this section? To a subscriber, yes, the set of all signers keys are returned (see {{subs-profile}} section: "The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers..."). If you did mean it for publishers, I don't see why.
 -->
 - the following fields from the Authorization Response (Section 3.2 of {{I-D.ietf-ace-key-groupcomm}}):
-  * 'profile' set to "coap_pubsub", as specified in {{iana-profile}}
+  * 'profile' set to "coap_pubsub_app", as specified in {{iana-profile}}
   * OPTIONALLY 'scope', set to a CBOR array containing:
     - the broker's topic as first element, and
     - the string "publisher" if the client is an authorized publisher, "subscriber" if the client is an authorized subscriber, or a CBOR array containing both, if the client is authorized to be both.
@@ -318,7 +318,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 
 ~~~~~~~~~~~~
 {
-  "profile" : "coap_pubsub",
+  "profile" : "coap_pubsub_app",
   "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
   -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
@@ -379,7 +379,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 
 ~~~~~~~~~~~~
 {
-  "profile" : "coap_pubsub",
+  "profile" : "coap_pubsub_app",
   "scope" : ["Broker1/Temp", "subscriber"],
   "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
@@ -517,7 +517,7 @@ The following registrations are done for the "ACE Groupcomm Profile" Registry fo
 Note to RFC Editor: Please replace all occurrences of "\[\[This document\]\]"
 with the RFC number of this specification and delete this paragraph.
 
-Name: coap_pubsub
+Name: coap_pubsub_app
 
 Description: Profile for delegating client authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment.
 
@@ -536,7 +536,7 @@ Name: COSE_Key
 
 Key Type Value: TBD
 
-Profile: coap_pubsub
+Profile: coap_pubsub_app
 
 Description: COSE_Key object
 
@@ -555,7 +555,7 @@ This section lists the specifications on this profile based on the requirements 
 
 * Specify the encoding and value of the identifier of group or topic and role of 'scope': see {{retr-cosekey}}).
 
-* Specify and register the application profile identifier: "coap_pubsub", see {{iana-profile}}.
+* Specify and register the application profile identifier: "coap_pubsub_app", see {{iana-profile}}.
 
 * Specify the acceptable values of 'kty': "COSE_Key", see {{retr-cosekey}}.
 
