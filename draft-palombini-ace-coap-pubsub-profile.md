@@ -192,24 +192,27 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
 
 After retrieving the AS2 address, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in {{I-D.ietf-ace-key-groupcomm}}, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
 
-More specifically, the Client sends a POST request to the /token endpoint on AS2, that MUST contain in the payload (formatted as a CBOR map):
+More specifically, the Client sends a POST request to the /token endpoint on AS2, with Content-Format = "application/ace+cbor" that MUST contain in the payload (formatted as a CBOR map):
 
 - the following fields from the Authorization Request (Section 3.1 of {{I-D.ietf-ace-key-groupcomm}}):
-  * the grant type set to "client_credentials",
-  * OPTIONALLY, if needed, other additional parameters such as "client_id"
+  * 'grant_type' set to "client_credentials",
+  * OPTIONALLY, if needed, other additional parameters such as 'client_id'
 - the following fields from the Key Distribution Request (Section 4.1 of {{I-D.ietf-ace-key-groupcomm}}):
-  * the client\_cred parameter containing the Client's public key, if the Client needs to directly send that to the AS2,
-  * the scope parameter set to a CBOR array containing the broker's topic as first element and the string "publisher" for publishers and "subscriber" for subscribers as second element
-  * the get_pub_keys parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
-  * OPTIONALLY, if needed, the pub_keys_repos parameter
+  * 'type' set to 1 ("key distribution")
+  * 'client\_cred' parameter containing the Client's public key formatted as a COSE_Key, if the Client needs to directly send that to the AS2,
+  * 'scope' parameter set to a CBOR array containing:
+    - the broker's topic as first element, and 
+    - the string "publisher" for publishers and "subscriber" for subscribers as second element
+  * 'get_pub_keys' parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
+  * OPTIONALLY, if needed, the 'pub_keys_repos' parameter
 
-Note that the alg parameter in the client_cred COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}.
+Note that the alg parameter in the 'client_cred' COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}.
 
 Examples of the payload of a Authorization + Key Distribution Request are specified in {{fig-post-as2}} and {{fig-post2-as2}}.
 
 The AS2 verifies that the Client is authorized to access the topic and, if the 'client_cred' parameter is present, stores the public key of the Client.
 
-The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}. The payload (formatted as a CBOR map) MUST contain:
+The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}, with Content-Format = "application/ace+cbor". The payload (formatted as a CBOR map) MUST contain:
 
 <!-- Jim
  why not use the cnf return value for the key?  Also there is no reason to make it a bstr rather than a map. 
@@ -223,18 +226,20 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
   Are you sure this comment should be in this section? To a subscriber, yes, the set of all signers keys are returned (see {{subs-profile}} section: "The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers..."). If you did mean it for publishers, I don't see why.
 -->
 - the following fields from the Authorization Response (Section 3.2 of {{I-D.ietf-ace-key-groupcomm}}):
-  * profile set to "coap_pubsub"
-  * scope parameter (optionally), set to a CBOR array containing the broker's topic as first element and the string "publisher" for publishers and "subscriber" for subscribers as second element
+  * 'profile' set to "coap_pubsub"
+  * OPTIONALLY 'scope', set to a CBOR array containing:
+    - the broker's topic as first element, and
+    - the string "publisher" if the client is an authorized publisher and "subscriber" if the client is an authorized subscriber, as second element
 - the following fields from the Key Distribution Response (Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}):
-  * kty parameter identifies a key type "COSE_Key", as defined in {{iana-ace-groupcomm-key}}.
-  * key parameter, which contains a "COSE_Key" object (defined in {{RFC8152}}, containing:
-    * kty with value 4 (symmetric)
-    * alg with value defined by the AS2 (Content Encryption Algorithm)
-    * Base IV with value defined by the AS2
-    * k with value the symmetric key value
-<!--    * OPTIONALLY, exp with the expiration time of the key COSE_Key does not contain exp, maybe add this-->
-    * OPTIONALLY, kid with an identifier for the key value
-  * "pub\_keys", containing the public keys of all authorized signing members, if the "get\_pub\_keys" parameter was present and set to the empty array in the Authorization + Key Distribution Request
+  * 'kty' identifies a key type "COSE_Key", as defined in {{iana-ace-groupcomm-key}}.
+  * 'key', which contains a "COSE_Key" object (defined in {{RFC8152}}, containing:
+    * 'kty' with value 4 (symmetric)
+    * 'alg' with value defined by the AS2 (Content Encryption Algorithm)
+    * 'Base IV' with value defined by the AS2
+    * 'k' with value the symmetric key value
+    * OPTIONALLY, 'kid' with an identifier for the key value
+  * OPTIONALLY, exp with the expiration time of the key
+  * 'pub\_keys', containing the public keys of all authorized signing members formatted as COSE_Keys, if the 'get\_pub\_keys' parameter was present and set to the empty array in the Authorization + Key Distribution Request
 
 Examples for the response payload are detailed in {{fig-resp-as2}} and {{fig-resp2-as2}}.
 
@@ -287,6 +292,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
 {
   "grant_type" : "client_credentials",
   "scope" : ["Broker1/Temp", "publisher"],
+  "type" = 1,
   "client_id" : "publisher1",
   "client_cred" : 
     { / COSE_Key /
@@ -348,15 +354,16 @@ Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 This step is the same as (B) between Publisher and AS2 ({{retr-cosekey}}), with the following differences:
 
-* The Authorization + Key Distribution Request MUST NOT contain the client\_cred parameter, the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter get_pub_keys set to empty array.
+* The Authorization + Key Distribution Request MUST NOT contain the 'client\_cred parameter', the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter 'get_pub_keys' set to empty array.
 
-* The Authorization + Key Distribution Response MUST contain the pub_keys parameter.
+* The Authorization + Key Distribution Response MUST contain the 'pub_keys' parameter.
 
 An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
 
 ~~~~~~~~~~~~
 {
   "grant_type" : "client_credentials",
+  "type" = 1,
   "scope" : ["Broker1/Temp", "subscriber"],
   "get_pub_keys" : [ ]
 }
@@ -497,9 +504,9 @@ TODO: expand on security and privacy considerations
 
 # IANA Considerations
 
-## ACE OAuth Profile Registry
+## ACE Groupcomm Profile Registry {#iana-profile}
 
-The following registrations are done for the ACE OAuth Profile Registry following the procedure specified in {{I-D.ietf-ace-oauth-authz}}.
+The following registrations are done for the "ACE Groupcomm Profile" Registry following the procedure specified in {{I-D.ietf-ace-key-groupcomm}}.
 
 Note to RFC Editor: Please replace all occurrences of "\[\[This document\]\]"
 with the RFC number of this specification and delete this paragraph.
@@ -523,13 +530,40 @@ Name: COSE_Key
 
 Key Type Value: TBD
 
-Profile: 
+Profile: coap_pubsub
 
 Description: COSE_Key object
 
-References: {{RFC8152}}
+References: {{RFC8152}}, \[\[This document\]\]
 
 --- back
+
+
+# Requirements on Application Profiles
+
+This section lists the specifications on this profile based on the requirements defined in Appendix A of {{I-D.ietf-ace-key-groupcomm}}
+
+* Specify the communication protocol the members of the group must use: CoAP pub/sub.
+
+* Specify the security protocol the group members must use to protect their communication: Object Security of Content using COSE.
+
+* Specify the encoding and value of the identifier of group or topic and role of 'scope': see {{retr-cosekey}}).
+
+* Specify and register the application profile identifier: "coap_pubsub", see {{iana-profile}}.
+
+* Specify the acceptable values of 'kty': "COSE_Key", see {{retr-cosekey}}.
+
+* Specify the format and content of 'group\_policies' entries
+
+* Optionally, specify the format and content of 'mgt\_key\_material': not defined
+
+* Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC: up to the application.
+
+* Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used: COSE_Keys are used.
+
+* Optionally, specify the acceptable values for parameters related to signature algorithm and signature keys: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc': not defined
+
+* Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used: not defined.
 
 # Acknowledgments
 {: numbered="no"}
