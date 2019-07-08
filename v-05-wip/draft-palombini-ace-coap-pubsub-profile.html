@@ -290,7 +290,7 @@ ul.toc li {
 <link href="#rfc.section.4" rel="Chapter" title="4 Publisher">
 <link href="#rfc.section.5" rel="Chapter" title="5 Subscriber">
 <link href="#rfc.section.6" rel="Chapter" title="6 Pub-Sub Protected Communication">
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Using COSE Objects to protect the resource representation">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Using COSE Objects To Protect The Resource Representation">
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
 <link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations">
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 ACE Groupcomm Profile Registry">
@@ -375,7 +375,7 @@ ul.toc li {
 </li>
 <li>6.   <a href="#rfc.section.6">Pub-Sub Protected Communication</a>
 </li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">Using COSE Objects to protect the resource representation</a>
+<ul><li>6.1.   <a href="#rfc.section.6.1">Using COSE Objects To Protect The Resource Representation</a>
 </li>
 </ul><li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>
@@ -404,7 +404,7 @@ ul.toc li {
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">The publisher-subscriber setting allows for devices with limited reachability to communicate via a broker that enables store-and-forward messaging between the devices. The pub-sub scenario using the Constrained Application Protocol (CoAP) is specified in <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>. This document defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>.</p>
+<p id="rfc.section.1.p.1">The publisher-subscriber setting allows for devices with limited reachability to communicate via a broker that enables store-and-forward messaging between the devices. The pub-sub scenario using the Constrained Application Protocol (CoAP) is specified in <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>. This document defines a way to authorize nodes in a CoAP pub-sub type of setting, using the ACE framework <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, and to provide the keys for protecting the communication between these nodes.</p>
 <h1 id="rfc.section.1.1">
 <a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
 </h1>
@@ -512,7 +512,7 @@ ul.toc li {
 <li>&#8216;client_cred&#8217; parameter containing the Client&#8217;s public key formatted as a COSE_Key, if the Client needs to directly send that to the AS2,</li>
 <li>&#8216;scope&#8217; parameter set to a CBOR array containing: <ul>
 <li>the broker&#8217;s topic as first element, and</li>
-<li>the string &#8220;publisher&#8221; for publishers and &#8220;subscriber&#8221; for subscribers as second element</li>
+<li>the string &#8220;publisher&#8221; if the client request to be a publisher, &#8220;subscriber&#8221; if the client request to be a subscriber, or a CBOR array containing both, if the client request to be both.</li>
 </ul>
 </li>
 <li>&#8216;get_pub_keys&#8217; parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members</li>
@@ -528,10 +528,11 @@ ul.toc li {
 
 <ul>
 <li>the following fields from the Authorization Response (Section 3.2 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>): <ul>
-<li>&#8216;profile&#8217; set to &#8220;coap_pubsub&#8221;</li>
+<li>&#8216;profile&#8217; set to &#8220;coap_pubsub&#8221;, as specified in <a href="#iana-profile" class="xref">Section 8.1</a>
+</li>
 <li>OPTIONALLY &#8216;scope&#8217;, set to a CBOR array containing: <ul>
 <li>the broker&#8217;s topic as first element, and</li>
-<li>the string &#8220;publisher&#8221; if the client is an authorized publisher and &#8220;subscriber&#8221; if the client is an authorized subscriber, as second element</li>
+<li>the string &#8220;publisher&#8221; if the client is an authorized publisher, &#8220;subscriber&#8221; if the client is an authorized subscriber, or a CBOR array containing both, if the client is authorized to be both.</li>
 </ul>
 </li>
 </ul>
@@ -589,7 +590,7 @@ ul.toc li {
 <p id="rfc.section.4.p.5">(A) corresponds to the Access Token Request and Response between Publisher and Authorization Server to retrieve the Access Token and RS (Broker) Information.  As specified, the Publisher has the role of a CoAP client, the Broker has the role of the CoAP server.</p>
 <p id="rfc.section.4.p.6">(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols. Depending on the application, there may not be the need for this set up phase: for example, if OSCORE is used directly.</p>
 <p id="rfc.section.4.p.7">(A) and (C) details are specified in the profile used.</p>
-<p id="rfc.section.4.p.8">(B) corresponds to the retrieval of the keying material to protect the publication, and uses <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>. The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a>.</p>
+<p id="rfc.section.4.p.8">(B) corresponds to the retrieval of the keying material to protect the publication end-to-end with the subscribers (see <a href="#oscon" class="xref">Section 6.1</a>), and uses <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>. The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a>.</p>
 <p id="rfc.section.4.p.9">An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-resp-as2" class="xref">Figure 6</a>.</p>
 <div id="rfc.figure.5"></div>
 <div id="fig-post-as2"></div>
@@ -651,7 +652,7 @@ ul.toc li {
                                                        +------------+
 </pre>
 <p class="figure">Figure 7: Phase 2: Subscriber side</p>
-<p id="rfc.section.5.p.2">Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication.  The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a></p>
+<p id="rfc.section.5.p.2">Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying material to verify the publication end-to-end with the publishers (see <a href="#oscon" class="xref">Section 6.1</a>).  The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a></p>
 <p id="rfc.section.5.p.3">This step is the same as (B) between Publisher and AS2 (<a href="#retr-cosekey" class="xref">Section 3.1</a>), with the following differences:</p>
 <p></p>
 
@@ -698,7 +699,7 @@ ul.toc li {
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#pub-sub-protected-communication" id="pub-sub-protected-communication">Pub-Sub Protected Communication</a>
 </h1>
-<p id="rfc.section.6.p.1">This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place.</p>
+<p id="rfc.section.6.p.1">This section specifies the communication Publisher-Broker and Subscriber-Broker, after the previous phases have taken place. The operations of publishing and subscribing are defined in <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>.</p>
 <div id="rfc.figure.10"></div>
 <div id="pubsub-3"></div>
 <pre>
@@ -711,7 +712,7 @@ ul.toc li {
 +------------+             +------------+              +------------+
 </pre>
 <p class="figure">Figure 10: Phase 3: Secure communication between Publisher and Subscriber</p>
-<p id="rfc.section.6.p.2">The (E) message corresponds to the publication of a topic on the Broker.  The publication (the resource representation) is protected with COSE (<a href="#RFC8152" class="xref">[RFC8152]</a>).  The (F) message is the subscription of the Subscriber, which is unprotected.  The (G) message is the response from the Broker, where the publication is protected with COSE.</p>
+<p id="rfc.section.6.p.2">The (E) message corresponds to the publication of a topic on the Broker.  The publication (the resource representation) is protected with COSE (<a href="#RFC8152" class="xref">[RFC8152]</a>).  The (F) message is the subscription of the Subscriber, which is unprotected, unless a profile of ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> is used between Subscriber and Broker.  The (G) message is the response from the Broker, where the publication is protected with COSE.</p>
 <p id="rfc.section.6.p.3">The flow graph is presented below.</p>
 <div id="rfc.figure.11"></div>
 <div id="E-F-G-ex"></div>
@@ -726,7 +727,7 @@ ul.toc li {
 </pre>
 <p class="figure">Figure 11: (E), (F), (G): Example of protected communication</p>
 <h1 id="rfc.section.6.1">
-<a href="#rfc.section.6.1">6.1.</a> <a href="#using-cose-objects-to-protect-the-resource-representation" id="using-cose-objects-to-protect-the-resource-representation">Using COSE Objects to protect the resource representation</a>
+<a href="#rfc.section.6.1">6.1.</a> <a href="#oscon" id="oscon">Using COSE Objects To Protect The Resource Representation</a>
 </h1>
 <p id="rfc.section.6.1.p.1">The Publisher uses the symmetric COSE Key received from AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to protect the payload of the PUBLISH operation (Section 4.3 of <a href="#I-D.ietf-core-coap-pubsub" class="xref">[I-D.ietf-core-coap-pubsub]</a>). Specifically, the COSE Key is used to create a COSE_Encrypt0 with algorithm specified by AS2. The Publisher uses the private key corresponding to the public key sent to the AS2 in exchange B (<a href="#retr-cosekey" class="xref">Section 3.1</a>) to countersign the COSE Object as specified in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>. The CoAP payload is replaced by the COSE object before the publication is sent to the Broker.</p>
 <p id="rfc.section.6.1.p.2">The Subscriber uses the kid in the countersignature field in the COSE object to retrieve the right public key to verify the countersignature. It then uses the symmetric key received from AS2 to verify and decrypt the publication received in the payload of the CoAP Notification from the Broker.</p>
@@ -734,12 +735,11 @@ ul.toc li {
 <p></p>
 
 <ul>
-<li>The protected Headers (as described in Section 3 of <a href="#RFC8152" class="xref">[RFC8152]</a>) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in <a href="#retr-cosekey" class="xref">Section 3.1</a> and MUST contain the content encryption algorithm</li>
-<li>The unprotected Headers MUST contain the Partial IV and the counter signature that includes: <ul>
-<li>the algorithm (same value as in the asymmetric COSE Key received in (B)) in the protected header</li>
-<li>the kid (same value as the kid of the asymmetric COSE Key received in (B)) in the unprotected header</li>
-<li>the signature computed as specified in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>
-</li>
+<li>The protected Headers (as described in Section 3 of <a href="#RFC8152" class="xref">[RFC8152]</a>) MAY contain the kid parameter, with value the kid of the symmetric COSE Key received in <a href="#retr-cosekey" class="xref">Section 3.1</a> and MUST contain the content encryption algorithm.</li>
+<li>The unprotected Headers MUST contain the Partial IV, with value a sequence number that is incremented for every message sent, and the counter signature that includes: <ul>
+<li>the algorithm (same value as in the asymmetric COSE Key received in (B)) in the protected header;</li>
+<li>the kid (same value as the kid of the asymmetric COSE Key received in (B)) in the unprotected header;</li>
+<li>the signature computed as specified in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</li>
 </ul>
 </li>
 <li>The ciphertext, computed over the plaintext that MUST contain the CoAP payload.</li>
