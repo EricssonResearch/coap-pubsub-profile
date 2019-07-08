@@ -67,7 +67,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Profile Overview  . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  coap_pubsub Profile . . . . . . . . . . . . . . . . . . . . .   5
+   3.  coap_pubsub_app Profile . . . . . . . . . . . . . . . . . . .   5
      3.1.  Retrieval of COSE Key for protection of content . . . . .   5
    4.  Publisher . . . . . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Subscriber  . . . . . . . . . . . . . . . . . . . . . . . . .  10
@@ -226,7 +226,7 @@ Palombini                Expires January 9, 2020                [Page 4]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
-3.  coap_pubsub Profile
+3.  coap_pubsub_app Profile
 
    This profile uses [I-D.ietf-ace-key-groupcomm], which expands the ACE
    framework.  This document specifies which exact parameters from
@@ -238,7 +238,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    the Broker maps to the Dispatcher.
 
    Note that both publishers and subscribers use the same profile,
-   called "coap_pubsub".
+   called "coap_pubsub_app".
 
 3.1.  Retrieval of COSE Key for protection of content
 
@@ -368,7 +368,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    o  the following fields from the Authorization Response (Section 3.2
       of [I-D.ietf-ace-key-groupcomm]):
 
-      *  'profile' set to "coap_pubsub", as specified in Section 8.1
+      *  'profile' set to "coap_pubsub_app", as specified in Section 8.1
 
       *  OPTIONALLY 'scope', set to a CBOR array containing:
 
@@ -535,7 +535,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
                                  Publisher
 
          {
-           "profile" : "coap_pubsub",
+           "profile" : "coap_pubsub_app",
            "kty" : "COSE_Key",
            "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7',
            -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
@@ -629,7 +629,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
                                 Subscriber
 
    {
-     "profile" : "coap_pubsub",
+     "profile" : "coap_pubsub_app",
      "scope" : ["Broker1/Temp", "subscriber"],
      "kty" : "COSE_Key"
      "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7',
@@ -866,7 +866,7 @@ Internet-Draft             coap-pubsub-profile                 July 2019
    document]]" with the RFC number of this specification and delete this
    paragraph.
 
-   Name: coap_pubsub
+   Name: coap_pubsub_app
 
    Description: Profile for delegating client authentication and
    authorization for publishers and subscribers in a pub-sub setting
@@ -898,7 +898,7 @@ Palombini                Expires January 9, 2020               [Page 16]
 Internet-Draft             coap-pubsub-profile                 July 2019
 
 
-   Profile: coap_pubsub
+   Profile: coap_pubsub_app
 
    Description: COSE_Key object
 
@@ -983,7 +983,7 @@ Appendix A.  Requirements on Application Profiles
       and role of 'scope': see Section 3.1).
 
    o  Specify and register the application profile identifier:
-      "coap_pubsub", see Section 8.1.
+      "coap_pubsub_app", see Section 8.1.
 
    o  Specify the acceptable values of 'kty': "COSE_Key", see
       Section 3.1.

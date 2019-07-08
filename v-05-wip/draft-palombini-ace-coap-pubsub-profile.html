@@ -285,7 +285,7 @@ ul.toc li {
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology">
 <link href="#rfc.section.2" rel="Chapter" title="2 Profile Overview">
-<link href="#rfc.section.3" rel="Chapter" title="3 coap_pubsub Profile">
+<link href="#rfc.section.3" rel="Chapter" title="3 coap_pubsub_app Profile">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Retrieval of COSE Key for protection of content">
 <link href="#rfc.section.4" rel="Chapter" title="4 Publisher">
 <link href="#rfc.section.5" rel="Chapter" title="5 Subscriber">
@@ -365,7 +365,7 @@ ul.toc li {
 </li>
 </ul><li>2.   <a href="#rfc.section.2">Profile Overview</a>
 </li>
-<li>3.   <a href="#rfc.section.3">coap_pubsub Profile</a>
+<li>3.   <a href="#rfc.section.3">coap_pubsub_app Profile</a>
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Retrieval of COSE Key for protection of content</a>
 </li>
@@ -464,11 +464,11 @@ ul.toc li {
 </pre>
 <p id="rfc.section.2.p.8">Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this profile.</p>
 <h1 id="rfc.section.3">
-<a href="#rfc.section.3">3.</a> <a href="#profile" id="profile">coap_pubsub Profile</a>
+<a href="#rfc.section.3">3.</a> <a href="#profile" id="profile">coap_pubsub_app Profile</a>
 </h1>
 <p id="rfc.section.3.p.1">This profile uses <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, which expands the ACE framework. This document specifies which exact parameters from <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a> have to be used, and the values for each parameter.</p>
 <p id="rfc.section.3.p.2">The Publisher and the Subscriber map to the Client in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>, the AS2 maps to the AS and to the KDC, the Broker maps to the Dispatcher.</p>
-<p id="rfc.section.3.p.3">Note that both publishers and subscribers use the same profile, called &#8220;coap_pubsub&#8221;.</p>
+<p id="rfc.section.3.p.3">Note that both publishers and subscribers use the same profile, called &#8220;coap_pubsub_app&#8221;.</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#retr-cosekey" id="retr-cosekey">Retrieval of COSE Key for protection of content</a>
 </h1>
@@ -533,7 +533,7 @@ ul.toc li {
 
 <ul>
 <li>the following fields from the Authorization Response (Section 3.2 of <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>): <ul>
-<li>&#8216;profile&#8217; set to &#8220;coap_pubsub&#8221;, as specified in <a href="#iana-profile" class="xref">Section 8.1</a>
+<li>&#8216;profile&#8217; set to &#8220;coap_pubsub_app&#8221;, as specified in <a href="#iana-profile" class="xref">Section 8.1</a>
 </li>
 <li>OPTIONALLY &#8216;scope&#8217;, set to a CBOR array containing: <ul>
 <li>the broker&#8217;s topic as first element, and</li>
@@ -623,7 +623,7 @@ ul.toc li {
 <div id="fig-resp-as2"></div>
 <pre>
 {
-  "profile" : "coap_pubsub",
+  "profile" : "coap_pubsub_app",
   "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
   -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
@@ -681,7 +681,7 @@ ul.toc li {
 <div id="fig-resp2-as2"></div>
 <pre>
 {
-  "profile" : "coap_pubsub",
+  "profile" : "coap_pubsub_app",
   "scope" : ["Broker1/Temp", "subscriber"],
   "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
@@ -794,7 +794,7 @@ ul.toc li {
 </h1>
 <p id="rfc.section.8.1.p.1">The following registrations are done for the &#8220;ACE Groupcomm Profile&#8221; Registry following the procedure specified in <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>.</p>
 <p id="rfc.section.8.1.p.2">Note to RFC Editor: Please replace all occurrences of &#8220;[[This document]]&#8221; with the RFC number of this specification and delete this paragraph.</p>
-<p id="rfc.section.8.1.p.3">Name: coap_pubsub</p>
+<p id="rfc.section.8.1.p.3">Name: coap_pubsub_app</p>
 <p id="rfc.section.8.1.p.4">Description: Profile for delegating client authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment.</p>
 <p id="rfc.section.8.1.p.5">CBOR Key: TBD</p>
 <p id="rfc.section.8.1.p.6">Reference: [[This document]]</p>
@@ -805,7 +805,7 @@ ul.toc li {
 <p id="rfc.section.8.2.p.2">Note to RFC Editor: Please replace all occurrences of &#8220;[[This document]]&#8221; with the RFC number of this specification and delete this paragraph.</p>
 <p id="rfc.section.8.2.p.3">Name: COSE_Key</p>
 <p id="rfc.section.8.2.p.4">Key Type Value: TBD</p>
-<p id="rfc.section.8.2.p.5">Profile: coap_pubsub</p>
+<p id="rfc.section.8.2.p.5">Profile: coap_pubsub_app</p>
 <p id="rfc.section.8.2.p.6">Description: COSE_Key object</p>
 <p id="rfc.section.8.2.p.7">References: <a href="#RFC8152" class="xref">[RFC8152]</a>, [[This document]]</p>
 <h1 id="rfc.references">
@@ -873,7 +873,7 @@ ul.toc li {
 <li>Specify the communication protocol the members of the group must use: CoAP pub/sub.</li>
 <li>Specify the security protocol the group members must use to protect their communication: Object Security of Content using COSE.</li>
 <li>Specify the encoding and value of the identifier of group or topic and role of &#8216;scope&#8217;: see <a href="#retr-cosekey" class="xref">Section 3.1</a>).</li>
-<li>Specify and register the application profile identifier: &#8220;coap_pubsub&#8221;, see <a href="#iana-profile" class="xref">Section 8.1</a>.</li>
+<li>Specify and register the application profile identifier: &#8220;coap_pubsub_app&#8221;, see <a href="#iana-profile" class="xref">Section 8.1</a>.</li>
 <li>Specify the acceptable values of &#8216;kty&#8217;: &#8220;COSE_Key&#8221;, see <a href="#retr-cosekey" class="xref">Section 3.1</a>.</li>
 <li>Specify the format and content of &#8216;group_policies&#8217; entries</li>
 <li>Optionally, specify the format and content of &#8216;mgt_key_material&#8217;: not defined</li>
