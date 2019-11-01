@@ -279,7 +279,7 @@ In this section, it is specified how the Publisher requests, obtains and communi
 
 This is a combination of two independent phases:
 
-* one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCORE {{I-D.ietf-ace-oscore-profile}}. (A)(C)
+* one is the establishment of a secure connection between Publisher and Broker, using an ACE transport profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCORE {{I-D.ietf-ace-oscore-profile}}. (A)(C)
 * the other is the Publisher's retrieval of keying material to protect the publication. (B)
 
 In detail:
@@ -293,13 +293,11 @@ As specified, the Publisher has the role of a CoAP client, the Broker has the ro
 
 (B) corresponds to the retrieval of the keying material to protect the publication end-to-end with the subscribers (see {{oscon}}), and uses {{I-D.ietf-ace-key-groupcomm}}. The details are defined in {{retr-cosekey}}.
 
-An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}.
+An example of the payload of an Authorization + Joining Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}, where SIG is a signature computed using the private key associated to the public key and the algorithm in "client_cred".
 
 ~~~~~~~~~~~~
 {
-  "grant_type" : "client_credentials",
   "scope" : ["Broker1/Temp", "publisher"],
-  "type" = 1,
   "client_id" : "publisher1",
   "client_cred" : 
     { / COSE_Key /
@@ -310,11 +308,13 @@ An example of the payload of an Authorization + Key Distribution Request and cor
       / x / -2 : h'65eda5a12577c2bae829437fe338701a10aaa375e1bb5b5de1
       08de439c08551d', 
       / y /-3 : h'1e52ed75701163f7f9e40ddf9f341b3dc9ba860af7e0ca7ca7e
-      9eecd0084d19c' 
+      9eecd0084d19c',
+  "cnonce" : h'd36b581d1eef9c7c,
+  "client_cred_verify" : SIG 
     }
 }
 ~~~~~~~~~~~~
-{: #fig-post-as2 title="Authorization + Key Distribution Request payload for a Publisher"}
+{: #fig-post-as2 title="Authorization + Joining Request payload for a Publisher"}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~~
@@ -322,10 +322,10 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   "profile" : "coap_pubsub_app",
   "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'}
 }
 ~~~~~~~~~~~~
-{: #fig-resp-as2 title="Authorization + Key Distribution Response payload for a Publisher"}
+{: #fig-resp-as2 title="Authorization + Joining Response payload for a Publisher"}
 {: artwork-align="center"}
 
 
@@ -361,21 +361,19 @@ Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 This step is the same as (B) between Publisher and AS2 ({{retr-cosekey}}), with the following differences:
 
-* The Authorization + Key Distribution Request MUST NOT contain the 'client\_cred parameter', the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter 'get_pub_keys' set to empty array.
+* The Authorization + Joining Request MUST NOT contain the 'client\_cred parameter', the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Joining Request by using the parameter 'get_pub_keys' set to empty array.
 
 * The Authorization + Key Distribution Response MUST contain the 'pub_keys' parameter.
 
-An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
+An example of the payload of an Authorization + Joining Request and corresponding Response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
 
 ~~~~~~~~~~~~
 {
-  "grant_type" : "client_credentials",
-  "type" = 1,
   "scope" : ["Broker1/Temp", "subscriber"],
   "get_pub_keys" : [ ]
 }
 ~~~~~~~~~~~~
-{: #fig-post2-as2 title="Authorization + Key Distribution Request payload for a Subscriber"}
+{: #fig-post2-as2 title="Authorization + Joining Request payload for a Subscriber"}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~~
@@ -384,7 +382,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   "scope" : ["Broker1/Temp", "subscriber"],
   "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1: h'02e2cc3a9b92855220f255fff1c615bc'},
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'},
   "pub_keys" : [
    {
       1 : 2, / type EC2 /
@@ -399,7 +397,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   ]
 }
 ~~~~~~~~~~~~
-{: #fig-resp2-as2 title="Authorization + Key Distribution Response payload for a Subscriber"}
+{: #fig-resp2-as2 title="Authorization + Joining Response payload for a Subscriber"}
 {: artwork-align="center"}
 
 # Pub-Sub Protected Communication
