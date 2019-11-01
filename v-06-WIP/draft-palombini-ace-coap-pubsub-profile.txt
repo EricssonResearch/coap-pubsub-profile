@@ -81,8 +81,8 @@ Table of Contents
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  16
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  17
    Appendix A.  Requirements on Application Profiles . . . . . . . .  17
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  19
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -932,20 +932,20 @@ Appendix A.  Requirements on Application Profiles
    This section lists the specifications on this profile based on the
    requirements defined in Appendix A of [I-D.ietf-ace-key-groupcomm]
 
-   o  Specify the communication protocol the members of the group must
-      use: CoAP pub/sub.
+   o  REQ1: Specify the encoding and value of the identifier of group or
+      topic of 'scope': see Section 3.1).
 
-   o  Specify the security protocol the group members must use to
-      protect their communication: Object Security of Content using
-      COSE.
+   o  REQ2: Specify the encoding and value of roles of 'scope': see
+      Section 3.1).
 
-   o  Specify the encoding and value of the identifier of group or topic
-      and role of 'scope': see Section 3.1).
+   o  REQ3: Optionally, specify the acceptable values for 'sign_alg':
+      TODO
 
-   o  Specify and register the application profile identifier:
-      "coap_pubsub_app", see Section 8.1.
+   o  REQ4: Optionally, specify the acceptable values for
+      'sign_parameters': TODO
 
-
+   o  REQ5: Optionally, specify the acceptable values for
+      'sign_key_parameters': TODO
 
 
 
@@ -954,29 +954,69 @@ Palombini                  Expires May 4, 2020                 [Page 17]
 Internet-Draft             coap-pubsub-profile             November 2019
 
 
-   o  Specify the acceptable values of 'kty': "COSE_Key", see
+   o  REQ6: Optionally, specify the acceptable values for 'pub_key_enc':
+      TODO
+
+   o  REQ7: Specify the exact format of the 'key' value: COSE_Key, see
       Section 3.1.
 
-   o  Specify the format and content of 'group_policies' entries
+   o  REQ8: Specify the acceptable values of 'kty' : "COSE_Key", see
+      Section 3.1.
 
-   o  Optionally, specify the format and content of 'mgt_key_material':
-      not defined
+   o  REQ9: Specity the format of the identifiers of group members: TODO
 
-   o  Optionally, specify tranport profile of ACE
-      [I-D.ietf-ace-oauth-authz] to use between Client and KDC: up to
-      the application.
+   o  REQ10: Optionally, specify the format and content of
+      'group_policies' entries: not defined
 
-   o  Optionally, specify the encoding of public keys, of 'client_cred',
-      and of 'pub_keys' if COSE_Keys are not used: COSE_Keys are used.
+   o  REQ11: Specify the communication protocol the members of the group
+      must use: CoAP pub/sub.
 
-   o  Optionally, specify the acceptable values for parameters related
-      to signature algorithm and signature keys: 'sign_alg',
-      'sign_parameters', 'sign_key_parameters', 'pub_key_enc': not
-      defined
+   o  REQ12: Specify the security protocol the group members must use to
+      protect their communication.  This must provide encryption,
+      integrity and replay protection: Object Security of Content using
+      COSE, see Section 6.1.
 
-   o  Optionally, specify the negotiation of parameter values for
+   o  REQ13: Specify and register the application profile identifier :
+      "coap_pubsub_app", see Section 8.1.
+
+   o  REQ14: Optionally, specify the encoding of public keys, of
+      'client_cred', and of 'pub_keys' if COSE_Keys are not used: NA.
+
+   o  REQ15: Specify policies at the KDC to handle id that are not
+      included in get_pub_keys: TODO
+
+   o  REQ16: Specify the format and content of 'group_policies': TODO
+
+   o  REQ17: Specify the format of newly-generated individual keying
+      material for group members, or of the information to derive it,
+      and corresponding CBOR label : not defined
+
+   o  REQ18: Specify how the communication is secured between Client and
+      KDC.  Optionally, specify tranport profile of ACE
+      [I-D.ietf-ace-oauth-authz] to use between Client and KDC: pre-set,
+      as KDC is AS.
+
+   o  OPT1: Optionally, specify the encoding of public keys, of
+      'client_cred', and of 'pub_keys' if COSE_Keys are not used: NA
+
+   o  OPT2: Optionally, specify the negotiation of parameter values for
       signature algorithm and signature keys, if 'sign_info' and
-      'pub_key_enc' are not used: not defined.
+      'pub_key_enc' are not used: NA
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 18]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
+   o  OPT3: Optionally, specify the format and content of
+      'mgt_key_material': not defined
+
+   o  OPT4: Optionally, specify policies that instruct clients to retain
+      unsuccessfully decrypted messages and for how long, so that they
+      can be decrypted after getting updated keying material: not
+      defined
 
 Acknowledgments
 
@@ -1005,4 +1045,20 @@ Author's Address
 
 
 
-Palombini                  Expires May 4, 2020                 [Page 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 19]

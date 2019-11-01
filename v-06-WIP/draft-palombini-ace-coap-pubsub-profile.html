@@ -866,17 +866,28 @@ ul.toc li {
 <p></p>
 
 <ul>
-<li>Specify the communication protocol the members of the group must use: CoAP pub/sub.</li>
-<li>Specify the security protocol the group members must use to protect their communication: Object Security of Content using COSE.</li>
-<li>Specify the encoding and value of the identifier of group or topic and role of &#8216;scope&#8217;: see <a href="#retr-cosekey" class="xref">Section 3.1</a>).</li>
-<li>Specify and register the application profile identifier: &#8220;coap_pubsub_app&#8221;, see <a href="#iana-profile" class="xref">Section 8.1</a>.</li>
-<li>Specify the acceptable values of &#8216;kty&#8217;: &#8220;COSE_Key&#8221;, see <a href="#retr-cosekey" class="xref">Section 3.1</a>.</li>
-<li>Specify the format and content of &#8216;group_policies&#8217; entries</li>
-<li>Optionally, specify the format and content of &#8216;mgt_key_material&#8217;: not defined</li>
-<li>Optionally, specify tranport profile of ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> to use between Client and KDC: up to the application.</li>
-<li>Optionally, specify the encoding of public keys, of &#8216;client_cred&#8217;, and of &#8216;pub_keys&#8217; if COSE_Keys are not used: COSE_Keys are used.</li>
-<li>Optionally, specify the acceptable values for parameters related to signature algorithm and signature keys: &#8216;sign_alg&#8217;, &#8216;sign_parameters&#8217;, &#8216;sign_key_parameters&#8217;, &#8216;pub_key_enc&#8217;: not defined</li>
-<li>Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if &#8216;sign_info&#8217; and &#8216;pub_key_enc&#8217; are not used: not defined.</li>
+<li>REQ1: Specify the encoding and value of the identifier of group or topic of &#8216;scope&#8217;: see <a href="#retr-cosekey" class="xref">Section 3.1</a>).</li>
+<li>REQ2: Specify the encoding and value of roles of &#8216;scope&#8217;: see <a href="#retr-cosekey" class="xref">Section 3.1</a>).</li>
+<li>REQ3: Optionally, specify the acceptable values for &#8216;sign_alg&#8217;: TODO</li>
+<li>REQ4: Optionally, specify the acceptable values for &#8216;sign_parameters&#8217;: TODO</li>
+<li>REQ5: Optionally, specify the acceptable values for &#8216;sign_key_parameters&#8217;: TODO</li>
+<li>REQ6: Optionally, specify the acceptable values for &#8216;pub_key_enc&#8217;: TODO</li>
+<li>REQ7: Specify the exact format of the &#8216;key&#8217; value: COSE_Key, see <a href="#retr-cosekey" class="xref">Section 3.1</a>.</li>
+<li>REQ8: Specify the acceptable values of &#8216;kty&#8217; : &#8220;COSE_Key&#8221;, see <a href="#retr-cosekey" class="xref">Section 3.1</a>.</li>
+<li>REQ9: Specity the format of the identifiers of group members: TODO</li>
+<li>REQ10: Optionally, specify the format and content of &#8216;group_policies&#8217; entries: not defined</li>
+<li>REQ11: Specify the communication protocol the members of the group must use: CoAP pub/sub.</li>
+<li>REQ12: Specify the security protocol the group members must use to protect their communication. This must provide encryption, integrity and replay protection: Object Security of Content using COSE, see <a href="#oscon" class="xref">Section 6.1</a>.</li>
+<li>REQ13: Specify and register the application profile identifier : &#8220;coap_pubsub_app&#8221;, see <a href="#iana-profile" class="xref">Section 8.1</a>.</li>
+<li>REQ14: Optionally, specify the encoding of public keys, of &#8216;client_cred&#8217;, and of &#8216;pub_keys&#8217; if COSE_Keys are not used: NA.</li>
+<li>REQ15: Specify policies at the KDC to handle id that are not included in get_pub_keys: TODO</li>
+<li>REQ16: Specify the format and content of &#8216;group_policies&#8217;: TODO</li>
+<li>REQ17: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label : not defined</li>
+<li>REQ18: Specify how the communication is secured between Client and KDC. Optionally, specify tranport profile of ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> to use between Client and KDC: pre-set, as KDC is AS.</li>
+<li>OPT1: Optionally, specify the encoding of public keys, of &#8216;client_cred&#8217;, and of &#8216;pub_keys&#8217; if COSE_Keys are not used: NA</li>
+<li>OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if &#8216;sign_info&#8217; and &#8216;pub_key_enc&#8217; are not used: NA</li>
+<li>OPT3: Optionally, specify the format and content of &#8216;mgt_key_material&#8217;: not defined</li>
+<li>OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material: not defined</li>
 </ul>
 <h1 id="rfc.acknowledgments"><a href="#rfc.acknowledgments">Acknowledgments</a></h1>
 <p id="rfc.section.B.p.1">The author wishes to thank Ari Ker&#228;nen, John Mattsson, Ludwig Seitz, G&#246;ran Selander, Jim Schaad and Marco Tiloca for the useful discussion and reviews that helped shape this document.</p>
