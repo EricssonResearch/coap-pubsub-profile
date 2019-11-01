@@ -586,7 +586,7 @@ ul.toc li {
 <p></p>
 
 <ul>
-<li>one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS <a href="#I-D.ietf-ace-dtls-authorize" class="xref">[I-D.ietf-ace-dtls-authorize]</a> or OSCORE <a href="#I-D.ietf-ace-oscore-profile" class="xref">[I-D.ietf-ace-oscore-profile]</a>. (A)(C)</li>
+<li>one is the establishment of a secure connection between Publisher and Broker, using an ACE transport profile such as DTLS <a href="#I-D.ietf-ace-dtls-authorize" class="xref">[I-D.ietf-ace-dtls-authorize]</a> or OSCORE <a href="#I-D.ietf-ace-oscore-profile" class="xref">[I-D.ietf-ace-oscore-profile]</a>. (A)(C)</li>
 <li>the other is the Publisher&#8217;s retrieval of keying material to protect the publication. (B)</li>
 </ul>
 <p id="rfc.section.4.p.4">In detail:</p>
@@ -594,14 +594,12 @@ ul.toc li {
 <p id="rfc.section.4.p.6">(C) corresponds to the exchange between Publisher and Broker, where the Publisher sends its access token to the Broker and establishes a secure connection with the Broker. Depending on the Information received in (A), this can be for example DTLS handshake, or other protocols. Depending on the application, there may not be the need for this set up phase: for example, if OSCORE is used directly.</p>
 <p id="rfc.section.4.p.7">(A) and (C) details are specified in the profile used.</p>
 <p id="rfc.section.4.p.8">(B) corresponds to the retrieval of the keying material to protect the publication end-to-end with the subscribers (see <a href="#oscon" class="xref">Section 6.1</a>), and uses <a href="#I-D.ietf-ace-key-groupcomm" class="xref">[I-D.ietf-ace-key-groupcomm]</a>. The details are defined in <a href="#retr-cosekey" class="xref">Section 3.1</a>.</p>
-<p id="rfc.section.4.p.9">An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-resp-as2" class="xref">Figure 6</a>.</p>
+<p id="rfc.section.4.p.9">An example of the payload of an Authorization + Joining Request and corresponding Response for a Publisher is specified in <a href="#fig-post-as2" class="xref">Figure 5</a> and <a href="#fig-resp-as2" class="xref">Figure 6</a>, where SIG is a signature computed using the private key associated to the public key and the algorithm in &#8220;client_cred&#8221;.</p>
 <div id="rfc.figure.5"></div>
 <div id="fig-post-as2"></div>
 <pre>
 {
-  "grant_type" : "client_credentials",
   "scope" : ["Broker1/Temp", "publisher"],
-  "type" = 1,
   "client_id" : "publisher1",
   "client_cred" : 
     { / COSE_Key /
@@ -612,11 +610,13 @@ ul.toc li {
       / x / -2 : h'65eda5a12577c2bae829437fe338701a10aaa375e1bb5b5de1
       08de439c08551d', 
       / y /-3 : h'1e52ed75701163f7f9e40ddf9f341b3dc9ba860af7e0ca7ca7e
-      9eecd0084d19c' 
+      9eecd0084d19c',
+  "cnonce" : h'd36b581d1eef9c7c,
+  "client_cred_verify" : SIG 
     }
 }
 </pre>
-<p class="figure">Figure 5: Authorization + Key Distribution Request payload for a Publisher</p>
+<p class="figure">Figure 5: Authorization + Joining Request payload for a Publisher</p>
 <div id="rfc.figure.6"></div>
 <div id="fig-resp-as2"></div>
 <pre>
@@ -624,10 +624,10 @@ ul.toc li {
   "profile" : "coap_pubsub_app",
   "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'}
 }
 </pre>
-<p class="figure">Figure 6: Authorization + Key Distribution Response payload for a Publisher</p>
+<p class="figure">Figure 6: Authorization + Joining Response payload for a Publisher</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#subs-profile" id="subs-profile">Subscriber</a>
 </h1>
@@ -660,21 +660,19 @@ ul.toc li {
 <p></p>
 
 <ul>
-<li>The Authorization + Key Distribution Request MUST NOT contain the &#8216;client_cred parameter&#8217;, the role element in the &#8216;scope&#8217; parameter MUST be set to &#8220;subscriber&#8221;. The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter &#8216;get_pub_keys&#8217; set to empty array.</li>
+<li>The Authorization + Joining Request MUST NOT contain the &#8216;client_cred parameter&#8217;, the role element in the &#8216;scope&#8217; parameter MUST be set to &#8220;subscriber&#8221;. The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Joining Request by using the parameter &#8216;get_pub_keys&#8217; set to empty array.</li>
 <li>The Authorization + Key Distribution Response MUST contain the &#8216;pub_keys&#8217; parameter.</li>
 </ul>
-<p id="rfc.section.5.p.5">An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in <a href="#fig-post2-as2" class="xref">Figure 8</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
+<p id="rfc.section.5.p.5">An example of the payload of an Authorization + Joining Request and corresponding Response for a Subscriber is specified in <a href="#fig-post2-as2" class="xref">Figure 8</a> and <a href="#fig-resp2-as2" class="xref">Figure 9</a>.</p>
 <div id="rfc.figure.8"></div>
 <div id="fig-post2-as2"></div>
 <pre>
 {
-  "grant_type" : "client_credentials",
-  "type" = 1,
   "scope" : ["Broker1/Temp", "subscriber"],
   "get_pub_keys" : [ ]
 }
 </pre>
-<p class="figure">Figure 8: Authorization + Key Distribution Request payload for a Subscriber</p>
+<p class="figure">Figure 8: Authorization + Joining Request payload for a Subscriber</p>
 <div id="rfc.figure.9"></div>
 <div id="fig-resp2-as2"></div>
 <pre>
@@ -683,7 +681,7 @@ ul.toc li {
   "scope" : ["Broker1/Temp", "subscriber"],
   "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1: h'02e2cc3a9b92855220f255fff1c615bc'},
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'},
   "pub_keys" : [
    {
       1 : 2, / type EC2 /
@@ -698,7 +696,7 @@ ul.toc li {
   ]
 }
 </pre>
-<p class="figure">Figure 9: Authorization + Key Distribution Response payload for a Subscriber</p>
+<p class="figure">Figure 9: Authorization + Joining Response payload for a Subscriber</p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#pub-sub-protected-communication" id="pub-sub-protected-communication">Pub-Sub Protected Communication</a>
 </h1>

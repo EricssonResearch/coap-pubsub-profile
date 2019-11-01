@@ -73,16 +73,16 @@ Table of Contents
    5.  Subscriber  . . . . . . . . . . . . . . . . . . . . . . . . .  10
    6.  Pub-Sub Protected Communication . . . . . . . . . . . . . . .  12
      6.1.  Using COSE Objects To Protect The Resource Representation  13
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-     8.1.  ACE Groupcomm Profile Registry  . . . . . . . . . . . . .  16
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+     8.1.  ACE Groupcomm Profile Registry  . . . . . . . . . . . . .  15
      8.2.  ACE Groupcomm Key Registry  . . . . . . . . . . . . . . .  16
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  17
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  16
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  17
-   Appendix A.  Requirements on Application Profiles . . . . . . . .  18
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  19
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  19
+   Appendix A.  Requirements on Application Profiles . . . . . . . .  17
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
 
@@ -473,7 +473,7 @@ Internet-Draft             coap-pubsub-profile             November 2019
    This is a combination of two independent phases:
 
    o  one is the establishment of a secure connection between Publisher
-      and Broker, using an ACE profile such as DTLS
+      and Broker, using an ACE transport profile such as DTLS
       [I-D.ietf-ace-dtls-authorize] or OSCORE
       [I-D.ietf-ace-oscore-profile].  (A)(C)
 
@@ -509,14 +509,13 @@ Internet-Draft             coap-pubsub-profile             November 2019
    and uses [I-D.ietf-ace-key-groupcomm].  The details are defined in
    Section 3.1.
 
-   An example of the payload of an Authorization + Key Distribution
-   Request and corresponding Response for a Publisher is specified in
-   Figure 5 and Figure 6.
+   An example of the payload of an Authorization + Joining Request and
+   corresponding Response for a Publisher is specified in Figure 5 and
+   Figure 6, where SIG is a signature computed using the private key
+   associated to the public key and the algorithm in "client_cred".
 
    {
-     "grant_type" : "client_credentials",
      "scope" : ["Broker1/Temp", "publisher"],
-     "type" = 1,
      "client_id" : "publisher1",
      "client_cred" :
        { / COSE_Key /
@@ -527,27 +526,28 @@ Internet-Draft             coap-pubsub-profile             November 2019
          / x / -2 : h'65eda5a12577c2bae829437fe338701a10aaa375e1bb5b5de1
          08de439c08551d',
          / y /-3 : h'1e52ed75701163f7f9e40ddf9f341b3dc9ba860af7e0ca7ca7e
-         9eecd0084d19c'
+         9eecd0084d19c',
+     "cnonce" : h'd36b581d1eef9c7c,
+     "client_cred_verify" : SIG
        }
    }
 
-     Figure 5: Authorization + Key Distribution Request payload for a
-                                 Publisher
+     Figure 5: Authorization + Joining Request payload for a Publisher
 
          {
            "profile" : "coap_pubsub_app",
            "kty" : "COSE_Key",
            "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7',
-           -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
+                   -1: h'02e2cc3a9b92855220f255fff1c615bc'}
          }
 
-     Figure 6: Authorization + Key Distribution Response payload for a
-                                 Publisher
+    Figure 6: Authorization + Joining Response payload for a Publisher
 
 5.  Subscriber
 
    In this section, it is specified how the Subscriber retrieves the
    keying material to protect the publication.
+
 
 
 
@@ -590,26 +590,26 @@ Internet-Draft             coap-pubsub-profile             November 2019
    This step is the same as (B) between Publisher and AS2 (Section 3.1),
    with the following differences:
 
-   o  The Authorization + Key Distribution Request MUST NOT contain the
+   o  The Authorization + Joining Request MUST NOT contain the
       'client_cred parameter', the role element in the 'scope' parameter
       MUST be set to "subscriber".  The Subscriber MUST have access to
       the public keys of all the Publishers; this MAY be achieved in the
-      Authorization + Key Distribution Request by using the parameter
+      Authorization + Joining Request by using the parameter
       'get_pub_keys' set to empty array.
 
    o  The Authorization + Key Distribution Response MUST contain the
       'pub_keys' parameter.
 
-   An example of the payload of an Authorization + Key Distribution
-   Request and corresponding Response for a Subscriber is specified in
-   Figure 8 and Figure 9.
+   An example of the payload of an Authorization + Joining Request and
+   corresponding Response for a Subscriber is specified in Figure 8 and
+   Figure 9.
 
+                {
+                  "scope" : ["Broker1/Temp", "subscriber"],
+                  "get_pub_keys" : [ ]
+                }
 
-
-
-
-
-
+    Figure 8: Authorization + Joining Request payload for a Subscriber
 
 
 
@@ -618,22 +618,12 @@ Palombini                  Expires May 4, 2020                 [Page 11]
 Internet-Draft             coap-pubsub-profile             November 2019
 
 
-                {
-                  "grant_type" : "client_credentials",
-                  "type" = 1,
-                  "scope" : ["Broker1/Temp", "subscriber"],
-                  "get_pub_keys" : [ ]
-                }
-
-     Figure 8: Authorization + Key Distribution Request payload for a
-                                Subscriber
-
    {
      "profile" : "coap_pubsub_app",
      "scope" : ["Broker1/Temp", "subscriber"],
      "kty" : "COSE_Key"
      "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7',
-     -1: h'02e2cc3a9b92855220f255fff1c615bc'},
+             -1: h'02e2cc3a9b92855220f255fff1c615bc'},
      "pub_keys" : [
       {
          1 : 2, / type EC2 /
@@ -648,8 +638,7 @@ Internet-Draft             coap-pubsub-profile             November 2019
      ]
    }
 
-     Figure 9: Authorization + Key Distribution Response payload for a
-                                Subscriber
+    Figure 9: Authorization + Joining Response payload for a Subscriber
 
 6.  Pub-Sub Protected Communication
 
@@ -657,22 +646,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
    Subscriber-Broker, after the previous phases have taken place.  The
    operations of publishing and subscribing are defined in
    [I-D.ietf-core-coap-pubsub].
-
-
-
-
-
-
-
-
-
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 12]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
 
    +------------+             +------------+              +------------+
    |   CoAP     |             |   CoAP     |              |    CoAP    |
@@ -692,6 +665,14 @@ Internet-Draft             coap-pubsub-profile             November 2019
    [I-D.ietf-ace-oauth-authz] is used between Subscriber and Broker.
    The (G) message is the response from the Broker, where the
    publication is protected with COSE.
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 12]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
 
    The flow graph is presented below.
 
@@ -723,13 +704,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
    to verify and decrypt the publication received in the payload of the
    CoAP Notification from the Broker.
 
-
-
-Palombini                  Expires May 4, 2020                 [Page 13]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
-
    The COSE object is constructed in the following way:
 
    o  The protected Headers (as described in Section 3 of [RFC8152]) MAY
@@ -747,6 +721,15 @@ Internet-Draft             coap-pubsub-profile             November 2019
       *  the kid (same value as the kid of the asymmetric COSE Key
          received in (B)) in the unprotected header;
 
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 13]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
       *  the signature computed as specified in Section 4.5 of
          [RFC8152].
 
@@ -756,35 +739,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
    The external_aad is an empty string.
 
    An example is given in Figure 12
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 14]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
 
         16(
           [
@@ -824,6 +778,14 @@ Internet-Draft             coap-pubsub-profile             November 2019
    be set up and managed by the same entity having control of the topic,
    i.e. AS2.
 
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 14]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
    An application where it is not critical that only authorized
    Publishers can publish on a topic may decide not to make use of the
    asymmetric crypto and only use symmetric encryption/MAC to
@@ -834,13 +796,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
    need one symmetric key per topic, and would not need to know any
    information about the Publishers, that can be anonymous to it and the
    Broker.
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 15]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
 
    Subscribers can be excluded from future publications through re-
    keying for a certain topic.  This could be set up to happen on a
@@ -876,6 +831,17 @@ Internet-Draft             coap-pubsub-profile             November 2019
 
    Reference: [[This document]]
 
+
+
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 15]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
 8.2.  ACE Groupcomm Key Registry
 
    The following registrations are done for the ACE Groupcomm Key
@@ -889,14 +855,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
    Name: COSE_Key
 
    Key Type Value: TBD
-
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 16]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
 
    Profile: coap_pubsub_app
 
@@ -931,6 +889,15 @@ Internet-Draft             coap-pubsub-profile             November 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 16]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
               <https://www.rfc-editor.org/info/rfc6749>.
@@ -946,13 +913,6 @@ Internet-Draft             coap-pubsub-profile             November 2019
               architecture for authorization in constrained
               environments", draft-ietf-ace-actors-07 (work in
               progress), October 2018.
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 17]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
 
    [I-D.ietf-ace-dtls-authorize]
               Gerdes, S., Bergmann, O., Bormann, C., Selander, G., and
@@ -985,6 +945,15 @@ Appendix A.  Requirements on Application Profiles
    o  Specify and register the application profile identifier:
       "coap_pubsub_app", see Section 8.1.
 
+
+
+
+
+Palombini                  Expires May 4, 2020                 [Page 17]
+
+Internet-Draft             coap-pubsub-profile             November 2019
+
+
    o  Specify the acceptable values of 'kty': "COSE_Key", see
       Section 3.1.
 
@@ -1002,14 +971,6 @@ Appendix A.  Requirements on Application Profiles
 
    o  Optionally, specify the acceptable values for parameters related
       to signature algorithm and signature keys: 'sign_alg',
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 18]
-
-Internet-Draft             coap-pubsub-profile             November 2019
-
-
       'sign_parameters', 'sign_key_parameters', 'pub_key_enc': not
       defined
 
@@ -1044,21 +1005,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Palombini                  Expires May 4, 2020                 [Page 19]
+Palombini                  Expires May 4, 2020                 [Page 18]
