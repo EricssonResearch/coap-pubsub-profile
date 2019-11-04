@@ -43,7 +43,7 @@ entity:
 
 --- abstract
 
-This specification defines a profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication.
+This specification defines an application profile for authentication and authorization for publishers and subscribers in a pub-sub setting scenario in a constrained environment, using the ACE framework. This profile relies on transport layer or application layer security to authorize the publisher to the broker. Moreover, it relies on application layer security for publisher-broker and subscriber-broker communication.
 
 --- middle
 
@@ -60,9 +60,9 @@ document are to be interpreted as described in RFC 2119 {{RFC2119}}.
 Readers are expected to be familiar with the terms and concepts
 described in {{I-D.ietf-ace-oauth-authz}}, {{I-D.ietf-ace-key-groupcomm}} and {{I-D.ietf-core-coap-pubsub}}. In particular, analogously to {{I-D.ietf-ace-oauth-authz}}, terminology for entities in the architecture such as Client (C), Resource Server (RS), and Authorization Server (AS) is defined in OAuth 2.0 {{RFC6749}} and {{I-D.ietf-ace-actors}}, and terminology for entities such as the Key Distribution Center (KDC) and Dispatcher in {{I-D.ietf-ace-key-groupcomm}}.
 
-# Profile Overview {#overview}
+# Application Profile Overview {#overview}
 
-The objective of this document is to specify how to authorize nodes, provide keys, and protect a CoAP pub-sub communication, as described in {{I-D.ietf-core-coap-pubsub}}, using {{I-D.ietf-ace-key-groupcomm}}, which itself expands the Ace framework ({{I-D.ietf-ace-oauth-authz}}), and profiles ({{I-D.ietf-ace-dtls-authorize}}, {{I-D.ietf-ace-oscore-profile}}).
+The objective of this document is to specify how to authorize nodes, provide keys, and protect a CoAP pub-sub communication, as described in {{I-D.ietf-core-coap-pubsub}}, using {{I-D.ietf-ace-key-groupcomm}}, which itself expands the Ace framework ({{I-D.ietf-ace-oauth-authz}}), and transport profiles ({{I-D.ietf-ace-dtls-authorize}}, {{I-D.ietf-ace-oscore-profile}}).
 
 The architecture of the scenario is shown in {{archi}}.
 
@@ -106,7 +106,7 @@ There are four phases, the first three can be done in parallel.
 4. The Publisher and the Subscriber securely post to and get publications from the Broker.
 
 This exchange aims at setting up 2 different security associations: on the one hand, the Publisher has a security association with the Broker, to protect the communication and securely authorize the Publisher to publish on a topic (Security Association 1). On the other hand, the Publisher has a security association with the Subscriber, to protect the publication content itself (Security Association 2).
-The Security Association 1 is set up using AS1 and a profile of {{I-D.ietf-ace-oauth-authz}}, the Security Association 2 is set up using AS2 and {{I-D.ietf-ace-key-groupcomm}}.
+The Security Association 1 is set up using AS1 and a transport profile of {{I-D.ietf-ace-oauth-authz}}, the Security Association 2 is set up using AS2 and {{I-D.ietf-ace-key-groupcomm}}.
 
 Note that, analogously to the Publisher, the Subscriber can also set up an additional security association with the Broker, using an AS, in the same way the Publisher does with AS1. In this case, only authorized Subscribers would be able to get notifications from the Broker. The overhead would be that each Subscriber should access the AS and get all the information to start a secure exchange with the Broker.
 
@@ -145,9 +145,9 @@ on a "revocation" of a publisher's right to publish?  (As opposed to the right j
 FP: Yes, the broker should be notified of revocation. This is not specified here, and I think this is a general topic that the framework should address: no profile deals with revocations so far, as far as I can tell. Some additional content on revocation is in the ace-key-groupcomm doc.
 -->
 
-Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this profile.
+Note that AS1 and AS2 might either be co-resident or be 2 separate physical entities, in which case access control policies must be exchanged between AS1 and AS2, so that they agree on rights for joining nodes about specific topics. How the policies are exchanged is out of scope for this specification.
 
-# coap_pubsub_app Profile {#profile}
+# coap_pubsub_app Application Profile {#profile}
 
 This profile uses {{I-D.ietf-ace-key-groupcomm}}, which expands the ACE framework. This document specifies which exact parameters from {{I-D.ietf-ace-key-groupcomm}} have to be used, and the values for each parameter.
 
@@ -177,7 +177,7 @@ This phase is common to both Publisher and Subscriber. To maintain the generalit
 {: #B title="B: Access request - response"}
 {: artwork-align="center"}
 
-Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1), to determine the AS2 in charge of a topic hosted at the Broker, the Broker MAY send the address of both the AS in charge of the topic back to the Client in the 'AS' parameter in the AS Information, as a response to an Unauthorized Resource Request (Section 5.1.2). An example using CBOR diagnostic notation is given below:
+Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1), to determine the AS2 in charge of a topic hosted at the Broker, the Broker MAY send the address of both the AS in charge of the topic back to the Client in the 'AS' parameter in the AS Information, as a response to an Unauthorized Resource Request (Section 5.1.2). The uri of AS2 is concatenated to the uri of AS1, and separated by a comma. An example using CBOR diagnostic notation is given below:
 
 ~~~~~~~~~~~
     4.01 Unauthorized
@@ -194,31 +194,32 @@ Complementary to what is defined in {{I-D.ietf-ace-oauth-authz}} (Section 5.1.1)
  The broker _may_ send this info to both pub and sub, and then the subscriber could just discard the AS it does not need (AS1). Or the sub could know what AS to contact from a different exchange.
 -->
 
-After retrieving the AS2 address, the Client MAY send a Pub Key Format Negociation Request to the AS, in order to request necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. This request is a subset of the Token Post request defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically including the parameters 'sign_info' and 'pub_key_enc'. The AS MUST respond with the response defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically including the same  parameters 'sign_info' and 'pub_key_enc'.
+After retrieving the AS2 address, the Client MAY send a request to the AS, in order to retrieve necessary information concerning the public keys in the group, as well as concerning the algorithm and related parameters for computing signatures in the group. This request is a subset of the Token POST request defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically a CoAP POST request to a specific resource at the AS, including only the parameters 'sign_info' and 'pub_key_enc' in the CBOR map in the payload. The default url-path for this resource is /ace-group/gid/cs-info, where "gid" is the topic identifier, but implementations are not required to use this name, and can use their own instead. The AS MUST respond with the response defined in Section 3.3 of {{I-D.ietf-ace-key-groupcomm}}, specifically including the parameters 'sign_info', 'pub_key_enc', and 'rsnonce' (8 bytes pseudo-random nonce generated by the AS).
 
-After that, the Client sends an Authorization + Key Distribution Request, which is an Authorization Request merged with a Key Distribution Request, as described in {{I-D.ietf-ace-key-groupcomm}}, Sections 3.1 and 4.1. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
+After that, the Client sends an Authorization + Joining Request, which is an Authorization Request merged with a Joining Request, as described in {{I-D.ietf-ace-key-groupcomm}}, Sections 3.1 and 4.2. The reason for merging these two messages is that the AS2 is both the AS and the KDC, in this setting, so the Authorization Response and the Post Token message are not necessary. 
 
-More specifically, the Client sends a POST request to the /token endpoint on AS2, with Content-Format = "application/ace+cbor" that MUST contain in the payload (formatted as a CBOR map):
+More specifically, the Client sends a POST request to the /ace-group/gid endpoint on AS2, with Content-Format = "application/ace+cbor" that MUST contain in the payload (formatted as a CBOR map):
 
-- the following fields from the Authorization Request (Section 3.1 of {{I-D.ietf-ace-key-groupcomm}}):
-  * 'grant_type' set to "client_credentials",
-  * OPTIONALLY, if needed, other additional parameters such as 'client_id'
-- the following fields from the Key Distribution Request (Section 4.1 of {{I-D.ietf-ace-key-groupcomm}}):
-  * 'type' set to 1 ("key distribution")
-  * 'client\_cred' parameter containing the Client's public key formatted as a COSE_Key, if the Client needs to directly send that to the AS2,
+- the following fields from the Joining Request (Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}):
   * 'scope' parameter set to a CBOR array containing:
     - the broker's topic as first element, and 
-    - the string "publisher" if the client request to be a publisher, "subscriber" if the client request to be a subscriber, or a CBOR array containing both, if the client request to be both.
-  * 'get_pub_keys' parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members
+    - the text string "publisher" if the client request to be a publisher, "subscriber" if the client request to be a subscriber, or a CBOR array containing both, if the client request to be both.
+  * 'get_pub_keys' parameter set to the empty array if the Client needs to retrieve the public keys of the other pubsub members,
+  * 'client\_cred' parameter containing the Client's public key formatted as a COSE_Key, if the Client needs to directly send that to the AS2,
+  * 'cnonce', set to a 8 bytes long pseudo-random nonce, if 'client\_cred' is present,
+  * 'client\_cred\_verify', set to a singature computed over the rsnonce concatenated with cnonce, if 'client\_cred' is present,
   * OPTIONALLY, if needed, the 'pub_keys_repos' parameter
 
-Note that the alg parameter in the 'client_cred' COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}.
+- the following fields from the Authorization Request (Section 3.1 of {{I-D.ietf-ace-key-groupcomm}}):
+  * OPTIONALLY, if needed, additional parameters such as 'client_id'
 
-Examples of the payload of a Authorization + Key Distribution Request are specified in {{fig-post-as2}} and {{fig-post2-as2}}.
+Note that the alg parameter in the 'client_cred' COSE_Key MUST be a signing algorithm, as defined in section 8 of {{RFC8152}}, and that it is the same algorithm used to compute the signature sent in 'client\_cred\_verify'.
+
+Examples of the payload of a Authorization + Joining Request are specified in {{fig-post-as2}} and {{fig-post2-as2}}.
 
 The AS2 verifies that the Client is authorized to access the topic and, if the 'client_cred' parameter is present, stores the public key of the Client.
 
-The AS2 response is an Authorization + Key Distribution Response, see Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}, with Content-Format = "application/ace+cbor". The payload (formatted as a CBOR map) MUST contain:
+The AS2 response is an Authorization + Joining Response, with Content-Format = "application/ace+cbor". The payload (formatted as a CBOR map) MUST contain:
 
 <!-- Jim
  why not use the cnf return value for the key?  Also there is no reason to make it a bstr rather than a map. 
@@ -231,12 +232,7 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
 
   Are you sure this comment should be in this section? To a subscriber, yes, the set of all signers keys are returned (see {{subs-profile}} section: "The AS2 response contains a "cnf" parameter whose value is set to a COSE Key Set, (Section 7 of {{RFC8152}}) i.e. an array of COSE Keys, which contains the public keys of all authorized Publishers..."). If you did mean it for publishers, I don't see why.
 -->
-- the following fields from the Authorization Response (Section 3.2 of {{I-D.ietf-ace-key-groupcomm}}):
-  * 'profile' set to "coap_pubsub_app", as specified in {{iana-profile}}
-  * OPTIONALLY 'scope', set to a CBOR array containing:
-    - the broker's topic as first element, and
-    - the string "publisher" if the client is an authorized publisher, "subscriber" if the client is an authorized subscriber, or a CBOR array containing both, if the client is authorized to be both.
-- the following fields from the Key Distribution Response (Section 4.2 of {{I-D.ietf-ace-key-groupcomm}}):
+- the following fields from the Joining Response (Section 4.1 of {{I-D.ietf-ace-key-groupcomm}}):
   * 'kty' identifies a key type "COSE_Key", as defined in {{iana-ace-groupcomm-key}}.
   * 'key', which contains a "COSE_Key" object (defined in {{RFC8152}}, containing:
     * 'kty' with value 4 (symmetric)
@@ -244,11 +240,16 @@ The AS2 response is an Authorization + Key Distribution Response, see Section 4.
     * 'Base IV' with value defined by the AS2
     * 'k' with value the symmetric key value
     * OPTIONALLY, 'kid' with an identifier for the key value
-  * OPTIONALLY, exp with the expiration time of the key
+  * OPTIONALLY, 'exp' with the expiration time of the key
   * 'pub\_keys', containing the public keys of all authorized signing members formatted as COSE_Keys, if the 'get\_pub\_keys' parameter was present and set to the empty array in the Authorization + Key Distribution Request
 
-Examples for the response payload are detailed in {{fig-resp-as2}} and {{fig-resp2-as2}}.
+- the following fields from the Authorization Response (Section 3.2 of {{I-D.ietf-ace-key-groupcomm}}):
+  * 'profile' set to "coap_pubsub_app", as specified in {{iana-profile}}
+  * OPTIONALLY 'scope', set to a CBOR array containing:
+    - the broker's topic as first element, and
+    - the string "publisher" if the client is an authorized publisher, "subscriber" if the client is an authorized subscriber, or a CBOR array containing both, if the client is authorized to be both.
 
+Examples for the response payload are detailed in {{fig-resp-as2}} and {{fig-resp2-as2}}.
 
 # Publisher
 
@@ -278,7 +279,7 @@ In this section, it is specified how the Publisher requests, obtains and communi
 
 This is a combination of two independent phases:
 
-* one is the establishment of a secure connection between Publisher and Broker, using an ACE profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCORE {{I-D.ietf-ace-oscore-profile}}. (A)(C)
+* one is the establishment of a secure connection between Publisher and Broker, using an ACE transport profile such as DTLS {{I-D.ietf-ace-dtls-authorize}} or OSCORE {{I-D.ietf-ace-oscore-profile}}. (A)(C)
 * the other is the Publisher's retrieval of keying material to protect the publication. (B)
 
 In detail:
@@ -292,13 +293,11 @@ As specified, the Publisher has the role of a CoAP client, the Broker has the ro
 
 (B) corresponds to the retrieval of the keying material to protect the publication end-to-end with the subscribers (see {{oscon}}), and uses {{I-D.ietf-ace-key-groupcomm}}. The details are defined in {{retr-cosekey}}.
 
-An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}.
+An example of the payload of an Authorization + Joining Request and corresponding Response for a Publisher is specified in {{fig-post-as2}} and {{fig-resp-as2}}, where SIG is a signature computed using the private key associated to the public key and the algorithm in "client_cred".
 
 ~~~~~~~~~~~~
 {
-  "grant_type" : "client_credentials",
   "scope" : ["Broker1/Temp", "publisher"],
-  "type" = 1,
   "client_id" : "publisher1",
   "client_cred" : 
     { / COSE_Key /
@@ -309,11 +308,13 @@ An example of the payload of an Authorization + Key Distribution Request and cor
       / x / -2 : h'65eda5a12577c2bae829437fe338701a10aaa375e1bb5b5de1
       08de439c08551d', 
       / y /-3 : h'1e52ed75701163f7f9e40ddf9f341b3dc9ba860af7e0ca7ca7e
-      9eecd0084d19c' 
+      9eecd0084d19c',
+  "cnonce" : h'd36b581d1eef9c7c,
+  "client_cred_verify" : SIG 
     }
 }
 ~~~~~~~~~~~~
-{: #fig-post-as2 title="Authorization + Key Distribution Request payload for a Publisher"}
+{: #fig-post-as2 title="Authorization + Joining Request payload for a Publisher"}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~~
@@ -321,10 +322,10 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   "profile" : "coap_pubsub_app",
   "kty" : "COSE_Key",
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1:   h'02e2cc3a9b92855220f255fff1c615bc'}
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'}
 }
 ~~~~~~~~~~~~
-{: #fig-resp-as2 title="Authorization + Key Distribution Response payload for a Publisher"}
+{: #fig-resp-as2 title="Authorization + Joining Response payload for a Publisher"}
 {: artwork-align="center"}
 
 
@@ -360,21 +361,19 @@ Step (D) between Subscriber and AS2 corresponds to the retrieval of the keying m
 
 This step is the same as (B) between Publisher and AS2 ({{retr-cosekey}}), with the following differences:
 
-* The Authorization + Key Distribution Request MUST NOT contain the 'client\_cred parameter', the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Key Distribution Request by using the parameter 'get_pub_keys' set to empty array.
+* The Authorization + Joining Request MUST NOT contain the 'client\_cred parameter', the role element in the 'scope' parameter MUST be set to "subscriber". The Subscriber MUST have access to the public keys of all the Publishers; this MAY be achieved in the Authorization + Joining Request by using the parameter 'get_pub_keys' set to empty array.
 
 * The Authorization + Key Distribution Response MUST contain the 'pub_keys' parameter.
 
-An example of the payload of an Authorization + Key Distribution Request and corresponding Response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
+An example of the payload of an Authorization + Joining Request and corresponding Response for a Subscriber is specified in {{fig-post2-as2}} and {{fig-resp2-as2}}.
 
 ~~~~~~~~~~~~
 {
-  "grant_type" : "client_credentials",
-  "type" = 1,
   "scope" : ["Broker1/Temp", "subscriber"],
   "get_pub_keys" : [ ]
 }
 ~~~~~~~~~~~~
-{: #fig-post2-as2 title="Authorization + Key Distribution Request payload for a Subscriber"}
+{: #fig-post2-as2 title="Authorization + Joining Request payload for a Subscriber"}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~~
@@ -383,7 +382,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   "scope" : ["Broker1/Temp", "subscriber"],
   "kty" : "COSE_Key"
   "key" : {1: 4, 2: h'1234', 3: 12, 5: h'1f389d14d17dc7', 
-  -1: h'02e2cc3a9b92855220f255fff1c615bc'},
+          -1: h'02e2cc3a9b92855220f255fff1c615bc'},
   "pub_keys" : [
    {
       1 : 2, / type EC2 /
@@ -398,7 +397,7 @@ An example of the payload of an Authorization + Key Distribution Request and cor
   ]
 }
 ~~~~~~~~~~~~
-{: #fig-resp2-as2 title="Authorization + Key Distribution Response payload for a Subscriber"}
+{: #fig-resp2-as2 title="Authorization + Joining Response payload for a Subscriber"}
 {: artwork-align="center"}
 
 # Pub-Sub Protected Communication
@@ -549,27 +548,49 @@ References: {{RFC8152}}, \[\[This document\]\]
 
 This section lists the specifications on this profile based on the requirements defined in Appendix A of {{I-D.ietf-ace-key-groupcomm}}
 
-* Specify the communication protocol the members of the group must use: CoAP pub/sub.
+* REQ1: Specify the encoding and value of the identifier of group or topic of 'scope': see {{retr-cosekey}}).
 
-* Specify the security protocol the group members must use to protect their communication: Object Security of Content using COSE.
+* REQ2: Specify the encoding and value of roles of 'scope': see {{retr-cosekey}}).
 
-* Specify the encoding and value of the identifier of group or topic and role of 'scope': see {{retr-cosekey}}).
+* REQ3: Optionally, specify the acceptable values for 'sign_alg': TODO
 
-* Specify and register the application profile identifier: "coap_pubsub_app", see {{iana-profile}}.
+* REQ4: Optionally, specify the acceptable values for 'sign_parameters': TODO
 
-* Specify the acceptable values of 'kty': "COSE_Key", see {{retr-cosekey}}.
+* REQ5: Optionally, specify the acceptable values for 'sign_key_parameters': TODO
 
-* Specify the format and content of 'group\_policies' entries
+* REQ6: Optionally, specify the acceptable values for 'pub_key_enc': TODO
 
-* Optionally, specify the format and content of 'mgt\_key\_material': not defined
+* REQ7: Specify the exact format of the 'key' value: COSE_Key, see {{retr-cosekey}}.
 
-* Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC: up to the application.
+* REQ8: Specify the acceptable values of 'kty' : "COSE_Key", see {{retr-cosekey}}.
 
-* Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used: COSE_Keys are used.
+* REQ9: Specity the format of the identifiers of group members: TODO
 
-* Optionally, specify the acceptable values for parameters related to signature algorithm and signature keys: 'sign_alg', 'sign_parameters', 'sign_key_parameters', 'pub_key_enc': not defined
+* REQ10: Optionally, specify the format and content of 'group\_policies' entries: not defined
 
-* Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used: not defined.
+* REQ11: Specify the communication protocol the members of the group must use: CoAP pub/sub.
+
+* REQ12: Specify the security protocol the group members must use to protect their communication. This must provide encryption, integrity and replay protection: Object Security of Content using COSE, see {{oscon}}.
+
+* REQ13: Specify and register the application profile identifier : "coap_pubsub_app", see {{iana-profile}}.
+
+* REQ14: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used: NA.
+
+* REQ15: Specify policies at the KDC to handle id that are not included in get_pub_keys: TODO
+
+* REQ16: Specify the format and content of 'group_policies': TODO
+
+* REQ17: Specify the format of newly-generated individual keying material for group members, or of the information to derive it, and corresponding CBOR label : not defined
+
+* REQ18: Specify how the communication is secured between Client and KDC. Optionally, specify tranport profile of ACE {{I-D.ietf-ace-oauth-authz}} to use between Client and KDC: pre-set, as KDC is AS.
+
+* OPT1: Optionally, specify the encoding of public keys, of 'client\_cred', and of 'pub\_keys' if COSE_Keys are not used: NA
+
+* OPT2: Optionally, specify the negotiation of parameter values for signature algorithm and signature keys, if 'sign_info' and 'pub_key_enc' are not used: NA
+
+* OPT3: Optionally, specify the format and content of 'mgt\_key\_material': not defined
+
+* OPT4: Optionally, specify policies that instruct clients to retain unsuccessfully decrypted messages and for how long, so that they can be decrypted after getting updated keying material: not defined
 
 # Acknowledgments
 {: numbered="no"}
